@@ -52,7 +52,6 @@ function Main(props) {
         }
     }, [])
 
-    console.log("ok")
 
     function _renderItem({ item, index }) {
         return (

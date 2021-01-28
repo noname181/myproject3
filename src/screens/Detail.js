@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 
 let menuHeight = Platform.OS == 'android' ? 55 : 53;
 const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 function Detail(props) {
     const [selectedItem, setSelectedItem] = useState(Number(props.route.params.keys));
@@ -32,7 +33,7 @@ function Detail(props) {
         setTimeout(() => {
             setLoad(true);
             //This line use to fix Backdrop element flash at start up
-        })
+        }, 500)
         return () =>
             navigation.dangerouslyGetParent().setOptions({
                 tabBarVisible: true
@@ -158,7 +159,7 @@ function Detail(props) {
                                     setTimeout(() => { }, 500)
                                     return;
                                 }}
-                                onEndReachedThreshold={0.2}
+                                onEndReachedThreshold={0.1}
                                 onEndReached={({ distanceFromEnd }) => {
                                     if (distanceFromEnd < 0) return;
                                     onLoadMore(index);
@@ -183,7 +184,7 @@ function Detail(props) {
 
                                     }}
                                 >
-                                    {/* <ActivityIndicator animating size="large" color="#f75f2d" /> */}
+                                    <ActivityIndicator animating size="large" color="#f75f2d" />
                                 </View> : null}
                             />
                         }
@@ -331,7 +332,7 @@ const styles = StyleSheet.create({
     },
     foodList: {
         top: 38,
-        height: '100%',
+        height: height - 38,
         width: '100%',
     },
 });
