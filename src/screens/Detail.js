@@ -183,7 +183,7 @@ function Detail(props) {
 
                                     }}
                                 >
-                                    <ActivityIndicator animating size="large" color="#f75f2d" />
+                                    {/* <ActivityIndicator animating size="large" color="#f75f2d" /> */}
                                 </View> : null}
                             />
                         }
