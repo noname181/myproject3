@@ -512,10 +512,6 @@ const dishList = [
         label: 'Tươi sống'
     },
     {
-        image: 'Layer9',
-        label: 'Chè'
-    },
-    {
         image: 'Layer10',
         label: 'Món Hàn'
     }
