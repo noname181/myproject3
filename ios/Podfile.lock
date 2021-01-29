@@ -627,7 +627,7 @@ PODS:
     - React-Core
   - react-native-maps (0.27.1):
     - React
-  - react-native-safe-area-context (3.1.8):
+  - react-native-safe-area-context (3.1.9):
     - React-Core
   - React-RCTActionSheet (0.63.2):
     - React-Core/RCTActionSheetHeaders (= 0.63.2)
@@ -695,18 +695,18 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.10):
     - React
-  - RNFBApp (8.4.3):
+  - RNFBApp (8.4.6):
     - Firebase/CoreOnly (= 6.29.0)
     - React-Core
-  - RNFBAuth (9.2.3):
+  - RNFBAuth (9.3.1):
     - Firebase/Auth (= 6.29.0)
     - React-Core
     - RNFBApp
-  - RNFBFirestore (7.8.2):
+  - RNFBFirestore (7.8.7):
     - Firebase/Firestore (= 6.29.0)
     - React-Core
     - RNFBApp
-  - RNFBStorage (7.4.14):
+  - RNFBStorage (7.4.10):
     - Firebase/Storage (= 6.29.0)
     - React-Core
     - RNFBApp
@@ -717,8 +717,35 @@ PODS:
     - React
   - RNPermissions (2.2.0):
     - React
-  - RNReanimated (1.13.0):
+  - RNReanimated (2.0.0-rc.2):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - Folly
+    - glog
+    - RCTRequired
+    - RCTTypeSafety
     - React
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (2.11.0):
     - React
   - RNSVG (12.1.0):
@@ -1019,23 +1046,23 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
-  Permission-AppTrackingTransparency: ae4200d3044616263bedcd6bfaf788abdbac5d7d
-  Permission-BluetoothPeripheral: d7b686f612db77ffb95762e28d76f01b587dcd03
-  Permission-Calendars: 3d05c490fd5abebdfdadc791c4a9a32a9194e711
-  Permission-Camera: 9ff12884205fb282b4a22b9e8c358ba53cee7567
-  Permission-Contacts: 2c9a8932f30582ed175551b7baa8d0344837c53b
-  Permission-FaceID: 3106c7006b85a3baec8081ba17ee1f39a16ca9e0
-  Permission-LocationAlways: 8026796fd0fc8d735adbd84cd1ae28a4fb22ac22
-  Permission-LocationWhenInUse: eba08412fee84a8ac5140472d83aef2427a5befe
-  Permission-MediaLibrary: d8dcc62b06bce4053adcfe53bceef73eef9d483a
-  Permission-Microphone: 06462b9d979ada12095bcff8d5ee1aeeeaf20b5d
-  Permission-Motion: b8f1f0e7baf8fb136fc54aabf6a8669e95265d16
-  Permission-Notifications: 572d4e94121e57dbecc71a0933abd8ed61108e92
-  Permission-PhotoLibrary: e3ff899f87a3eda29427c142ca93837e8802d228
-  Permission-Reminders: 82dfcc66d1afdaef20a0084350753c3ff2691e4a
-  Permission-Siri: 421b2dffe118fe17c5024b87e4578a27d0162488
-  Permission-SpeechRecognition: 0dc3e7a65fa38beb9d249cd37ef1b1565f72a494
-  Permission-StoreKit: 0fc596a9c7d2c3fbebfd4b1c89222db3ce94eba2
+  Permission-AppTrackingTransparency: a15d1645928130fcf2f0917edf14c215ee9f6937
+  Permission-BluetoothPeripheral: 6bdd3f1f07910bbbde9943b6f9dddbfa35278223
+  Permission-Calendars: d99acbb5976b08fdde5f149b6dc741045477762f
+  Permission-Camera: cc98f099e74178912b7c6b3795c3b59c246f0d7c
+  Permission-Contacts: 56cb2a195e10716b3ba202db6de15c625428d49d
+  Permission-FaceID: cac04a03fb40a4320b856e935d797ce2434662c4
+  Permission-LocationAlways: 04ecf678891b2da5feeaeaa21c4d1d62abb0679e
+  Permission-LocationWhenInUse: 26cc130874832c7079ad710c004c218d07e8f203
+  Permission-MediaLibrary: 83368ba6679fc6d2234c4bf7ac09bf04f9b921a2
+  Permission-Microphone: 2fb25d7e1efe36e82bcff52ce72d03ced7b6d474
+  Permission-Motion: 6473c1d10840ab4dcbda7478beaf7355069c9e56
+  Permission-Notifications: 1fa4616429c9919eebff8d8f8a05fbc2a51f9e58
+  Permission-PhotoLibrary: 7c335322d84ded15089f144d75cec154565fbc66
+  Permission-Reminders: 5d8ec4de4f15a859ebdafea51b2e4d6e04e661b6
+  Permission-Siri: 06bcb40ec734b6dba6dca1612fd66cc3d2c56641
+  Permission-SpeechRecognition: d5f1140d2e37d3041dc54b3c9a730d671541285f
+  Permission-StoreKit: aed372de4a4b941567f5a376128b9815bf39065e
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   RCTRequired: f13f25e7b12f925f1f6a6a8c69d929a03c0129fe
   RCTTypeSafety: 44982c5c8e43ff4141eb519a8ddc88059acd1f3a
@@ -1047,11 +1074,11 @@ SPEC CHECKSUMS:
   React-jsi: 54245e1d5f4b690dec614a73a3795964eeef13a8
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
-  react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
+  react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
-  react-native-image-picker: c6d75c4ab2cf46f9289f341242b219cb3c1180d3
+  react-native-image-picker: 32d1ad2c0024ca36161ae0d5c2117e2d6c441f11
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
-  react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
+  react-native-safe-area-context: 86612d2c9a9e94e288319262d10b5f93f0b395f5
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
   React-RCTBlob: 39cf0ece1927996c4466510e25d2105f67010e13
@@ -1062,17 +1089,17 @@ SPEC CHECKSUMS:
   React-RCTText: 1b6773e776e4b33f90468c20fe3b16ca3e224bb8
   React-RCTVibration: 4d2e726957f4087449739b595f107c0d4b6c2d2d
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
-  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
-  RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
-  RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
-  RNFBApp: d706c877d83f83595d33ef363146e89cfbfffd68
-  RNFBAuth: 563bc52bc86331d4cfc8aa28f21b9de70fe52727
-  RNFBFirestore: 64cb1df0ce51365ff757f5aacef6fc5e71caaa6a
-  RNFBStorage: 9c50dde1e04b985d6fb906cbaf800f086b3d1629
+  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
+  RNCClipboard: 5e299c6df8e0c98f3d7416b86ae563d3a9f768a3
+  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNFBApp: a6bbc03e3a95fd9c9164866b4dc26f42882ef6ae
+  RNFBAuth: d172f738720600a5d03ba9f5066d6242ad0c9aaf
+  RNFBFirestore: 0328677f7df6aaf05128ff35c61d77342d9c7965
+  RNFBStorage: 32f298ef95bc9486dee7ffd1a2ac39ff03218148
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNGoogleSignin: ccf71ee4b6cfd324fd788a41e457e2043838c0d9
-  RNPermissions: 477d88d0be7ecb0a7b344e4d5fbb0352de104626
-  RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
+  RNPermissions: e29e449d948ba1c04f3bb3bede5c662667543c49
+  RNReanimated: e8a1520b15df106c96214161078c69e4a23b8b29
   RNScreens: 0e91da98ab26d5d04c7b59a9b6bd694124caf88c
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
