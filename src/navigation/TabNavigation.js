@@ -70,7 +70,8 @@ function TabNavigation({ route, navigation }) {
                 name="Notification"
                 component={Notification}
                 options={{
-                    tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name="bell" size={25} color={color}></MaterialCommunityIcons>
+                    tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name="bell" size={25} color={color}></MaterialCommunityIcons>,
+                    tabBarBadge: 3
                 }}
             >
             </Tab.Screen>
@@ -79,6 +80,7 @@ function TabNavigation({ route, navigation }) {
                 component={Map}
                 options={{
                     tabBarIcon: ({ size, color }) => <Ionicons name="map" size={25} color={color}></Ionicons>
+
                 }}
             >
 
