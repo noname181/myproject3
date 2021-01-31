@@ -37,7 +37,6 @@ function TabNavigation({ route, navigation }) {
                 },
                 tabStyle: {
                     flex: 1,
-                    paddingBottom: 5
                 },
                 showLabel: false
             }}

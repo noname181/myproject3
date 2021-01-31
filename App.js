@@ -10,6 +10,7 @@ import AuthContext from './src/hooks/AuthContext';
 import AsyncStorage from '@react-native-community/async-storage';
 import { I18nManager } from "react-native";
 import jwtDecode from 'jwt-decode';
+import SplashScreen from 'react-native-splash-screen';
 
 // import firebase from '@react-native-firebase/app';
 
@@ -64,6 +65,7 @@ export default function App() {
   }
 
   useEffect(() => {
+    SplashScreen.hide();
     checkUserSignedIn();
     return () => {
     };
