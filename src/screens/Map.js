@@ -11,6 +11,7 @@ import Geocoder from 'react-native-geocoding'
 import MyStatusBar from '../components/MyStatusBar'
 import { connect } from 'react-redux'
 import AuthContext from '../hooks/AuthContext'
+import { useIsFocused } from '@react-navigation/native';
 
 function Map(props) {
     Geocoder.init("AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU", { language: "vi" })
@@ -29,6 +30,8 @@ function Map(props) {
         longitudeDelta: 0.0421,
     })
     const authContext = useContext(AuthContext);
+
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         // requestLocationPermission()
@@ -136,13 +139,11 @@ function Map(props) {
             })
             .catch(error => console.warn(error))
     }
-    useEffect(() => {
-        setCoords([])
-    }, [favouriteList])
 
     useEffect(() => {
-        favouriteList.length > 0 ? getDirections(null, `${favouriteList[0].coordinate.lat},${favouriteList[0].coordinate.lng}`) : null
-    }, [props.stores, props.currentLocation, favouriteList])
+
+        favouriteList.length > 0 ? getDirections(null, `${favouriteList[0].coordinate.lat},${favouriteList[0].coordinate.lng}`) : setCoords([])
+    }, [props.stores, props.currentLocation, favouriteList, isFocused])
 
     const favouriteList = authContext.user ? props.stores.filter((value, index) => {
         return authContext.user.favouriteRestaurent?.includes(value._id)

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, Dimensions, TouchableHighlight, Platform, StatusBar } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Dimensions, TouchableHighlight, Platform, StatusBar, TextInput, Image } from 'react-native';
 import MapInput from '../components/GoogleAutocomplete/MapInput';
 import MyMapView from '../components/GoogleAutocomplete/MapView';
 import { getLocation, geocodeLocationByName } from '../services/location-service';
 import MyStatusBar from '../components/MyStatusBar';
 import Geocoder from 'react-native-geocoding';
+import MapView, { Marker } from 'react-native-maps';
 
 let height = Dimensions.get('window').height;
 let width = Dimensions.get('window').width;
@@ -12,12 +13,12 @@ let width = Dimensions.get('window').width;
 function MapContainer() {
     const [region, setRegion] = useState({});
     const [typing, setTyping] = useState(false);
-    const [selection, setSelection] = useState(null);
+    const [selection, setSelection] = useState({ start: 0, end: 0 });
     const [address, setAddress] = useState("");
 
     useEffect(() => {
         getInitialState();
-        Geocoder.init("AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU", { language: "vi" });
+        Geocoder.init("AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU", { language: "us" });
 
         return () => {
         };
@@ -46,6 +47,15 @@ function MapContainer() {
             latitudeDelta: 0.003,
             longitudeDelta: 0.003
         });
+        Geocoder.from(loc.lat, loc.lng)
+            .then(json => {
+                let address = json.results[0].formatted_address;
+                let geometry = json.results[0].geometry.location;
+                // setCenterLocation({ latitude: geometry.lat, longitude: geometry.lng })
+                setAddress(address);
+                console.log(address);
+            })
+            .catch(error => console.warn(error));
     }
 
     function onMapRegionChange(region) {
@@ -55,16 +65,19 @@ function MapContainer() {
                 let address = json.results[0].formatted_address;
                 let geometry = json.results[0].geometry.location;
                 // setCenterLocation({ latitude: geometry.lat, longitude: geometry.lng })
-                // setSearch(address);
-                console.log(address);
+                setAddress(address);
             })
             .catch(error => console.warn(error));
+    }
+
+    const onChangeValue = (e) => {
+
+        setAddress(e.nativeEvent.text)
     }
 
     function focus() {
         setTyping(true);
         setSelection(null);
-        console.log(typing);
     }
 
     return (
@@ -78,18 +91,22 @@ function MapContainer() {
                         setTyping(false);
                         setSelection({ start: 0, end: 0 });
                     }}
-                    selection={selection}
                     onRegionChange={onMapRegionChange}
+                    selection={selection}
+                    value={address}
+                    changeValue={onChangeValue}
                 />
+
             </TouchableHighlight>
 
             {
                 region['latitude'] && !typing ?
-                    <View style={{ position: 'absolute', height: height, width: width, top: Platform.OS == 'android' ? StatusBar.currentHeight + 30 : 60, left: 0, zIndex: 2, elevation: 2 }}>
+                    <View style={{ position: 'absolute', height: height - 40, width: width, top: Platform.OS == 'android' ? StatusBar.currentHeight + 40 : 60, left: 0, zIndex: 2, elevation: 2 }}>
                         <MyMapView
                             region={region}
                             onRegionChange={(reg) => onMapRegionChange(reg)} />
-                        {/* <View style={{ height: 20, width: 20, borderRadius: 25, backgroundColor: 'blue', position: 'absolute', top: '49%', right: '48%' }}></View> */}
+                        <Image resizeMode={'contain'} source={require('../assets/images/marker.png')} style={{ height: 40, width: 40, borderRadius: 25, position: 'absolute', top: (height - 120) / 2, right: (width - 40) / 2 }}></Image>
+
                     </View>
                     : null
             }

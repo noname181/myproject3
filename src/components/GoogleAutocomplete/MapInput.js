@@ -20,7 +20,7 @@ function MapInput(props) {
             query={{
                 key: 'AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU',
                 language: 'vi',
-                components: 'country:vi',
+                components: 'country:vn',
             }}
             textInputProps={{
                 onFocus: props.focus,
@@ -28,7 +28,9 @@ function MapInput(props) {
                 placeholderTextColor: 'gray',
                 numberOfLines: 1,
                 selection: props.selection,
-                autoCorrect: false
+                autoCorrect: false,
+                value: props.value,
+                onChange: props.changeValue
             }}
             nearbyPlacesAPI='GooglePlacesSearch'
             debounce={300}
