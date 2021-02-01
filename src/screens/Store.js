@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, StyleSheet, ScrollView, FlatList, Text, Image, ImageBackground, PanResponder, Platform, Dimensions, ActivityIndicator, StatusBar, SectionList, TouchableOpacity } from 'react-native'
-import Screen from '../components/Screen'
-import Header from '../components/Header'
-import FoodItemVertical from '../components/FoodItemVertical'
-import ListItemSeparator from '../components/ListItemSeparator'
+import { Screen, Header, FoodItemVertical, MyStatusBar, HeaderStore } from '../components'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MyStatusBar from '../components/MyStatusBar'
-import HeaderStore from '../components/HeaderStore'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
@@ -75,49 +71,64 @@ function Store(props) {
         return () => { }
 
     }, [])
-    const panResponder = useRef(
-        PanResponder.create({
-            onMoveShouldSetPanResponder: () => true,
-            onPanResponderGrant: (evt, gestureState) => {
 
-            },
-            onPanResponderMove: (evt, gestureState) => {
+    const _onViewableItemsChanged = ({ viewableItems, changed }) => {
+        let length = viewableItems.length
 
-                if (gestureState.vy > 0) {
+        if (!sectionOffScroll && viewableItems[length - 1]) {
+            setSelectedItem(viewableItems[length - 1] ? viewableItems[length - 1].section.key + 1 : viewableItems[length - 2].section.key + 1)
+            menu.current.scrollToIndex({
+                animated: true,
+                index: viewableItems[length - 1] ? viewableItems[length - 1].section.key : viewableItems[length - 2].section.key,
+                viewPosition: 0.5
+            })
+        }
+        // console.log("Visible items :", viewableItems[length - 1].section.key)
+    }
 
-                    // Animated.event([{ y: heighBanner }], {
-                    //     useNativeDriver: false,
-                    //     listener: (evt) => { }
-                    // })({ y: gestureState.dy * 0.8 + 250 })
+    const _renderMenu = ({ item, index }) =>
+        <TouchableOpacity
+            style={selectedItem === index + 1 ? [styles.item, styles.active] : styles.item}
+            onPress={() => {
 
+                sectionOffScroll = true
+                setSelectedItem(index + 1)
+                menu.current.scrollToIndex({ animated: true, index: index, viewPosition: 0.5 })
+                section.current.scrollToLocation({
+                    animated: true,
+                    itemIndex: 0,
+                    sectionIndex: index,
+                    viewPosition: 0
+                })
+                setTimeout(() => {
+                    sectionOffScroll = false
+                }, 600)
 
-                } else {
-                    // Animated.event([{ y: heighBanner }], {
-                    //     useNativeDriver: false,
-                    //     listener: (evt) => { }
-                    // })({ y: 250 + gestureState.dy })
-                    // Animated.timing(opacityBanner, {
-                    //     toValue: 0,
-                    //     duration: 300,
-                    //     useNativeDriver: false
-                    // }).start()
+            }}
+        >
+            <Text style={selectedItem === index + 1 ? [styles.textMenu, { color: '#f75f2d' }] : styles.textMenu}>{item}</Text>
+        </TouchableOpacity>
 
-                }
+    const _renderSectionFoods = ({ item }) =>
+        <FoodItemVertical
+            id={item._id}
+            name={item.name}
+            price={item.price}
+            image={item.image}
+            description={item.description}
+            type={"product"}
+        />
 
-            },
-            onPanResponderRelease: (evt, gestureState) => {
-
-                // Animated.timing(heighBanner, {
-                //     toValue: 250,
-                //     duration: 300,
-                //     useNativeDriver: false,
-                // }).start()
-            },
-            onPanResponderTerminate: (evt, gestureState) => {
-            },
-            onPanResponderTerminationRequest: (evt, gestureState) => false
-        })
-    ).current
+    const onScrollSectionFoods = (e) => {
+        let currentY = e.nativeEvent.contentOffset.y
+        if (currentY < 108) {
+            opacityHeaderMenu.value = currentY / 108
+            opacityBanner.value = (108 - currentY) / 108
+        } else {
+            opacityHeaderMenu.value = 1
+            opacityBanner.value = 0
+        }
+    }
 
     const getDirections = async function (startLoc, destinationLoc) {
 
@@ -131,11 +142,6 @@ function Store(props) {
         }
     }
 
-    const Item = ({ food }) => (
-        <View style={styles.itemSection}>
-            <Text style={styles.title}>{food.name}</Text>
-        </View>
-    )
 
     props.cart.map(value => {
         amount += value.amount
@@ -162,30 +168,7 @@ function Store(props) {
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item, index }) =>
-                                <TouchableOpacity
-                                    style={selectedItem === index + 1 ? [styles.item, styles.active] : styles.item}
-                                    onPress={() => {
-
-                                        sectionOffScroll = true
-                                        setSelectedItem(index + 1)
-                                        menu.current.scrollToIndex({ animated: true, index: index, viewPosition: 0.5 })
-                                        section.current.scrollToLocation({
-                                            animated: true,
-                                            itemIndex: 0,
-                                            sectionIndex: index,
-                                            viewPosition: 0
-                                        })
-                                        setTimeout(() => {
-                                            sectionOffScroll = false
-                                        }, 600)
-
-                                    }}
-                                >
-                                    <Text style={selectedItem === index + 1 ? [styles.textMenu, { color: '#f75f2d' }] : styles.textMenu}>{item}</Text>
-                                </TouchableOpacity>
-
-                            }
+                            renderItem={_renderMenu}
 
                         />
                     </Animated.View>
@@ -223,29 +206,8 @@ function Store(props) {
                         keyExtractor={(item, index) => index}
                         stickySectionHeadersEnabled={false}
 
-                        renderItem={({ item }) =>
-                            <FoodItemVertical
-                                id={item._id}
-                                name={item.name}
-                                price={item.price}
-                                image={item.image}
-                                description={item.description}
-                                type={"product"}
-                            />
-                        }
-                        onViewableItemsChanged={({ viewableItems, changed }) => {
-                            let length = viewableItems.length
-
-                            if (!sectionOffScroll && viewableItems[length - 1]) {
-                                setSelectedItem(viewableItems[length - 1] ? viewableItems[length - 1].section.key + 1 : viewableItems[length - 2].section.key + 1)
-                                menu.current.scrollToIndex({
-                                    animated: true,
-                                    index: viewableItems[length - 1] ? viewableItems[length - 1].section.key : viewableItems[length - 2].section.key,
-                                    viewPosition: 0
-                                })
-                            }
-                            // console.log("Visible items :", viewableItems[length - 1].section.key)
-                        }}
+                        renderItem={_renderSectionFoods}
+                        onViewableItemsChanged={_onViewableItemsChanged}
                         viewabilityConfig={{
                             itemVisiblePercentThreshold: 100 //means if 50% of the item is visible
                         }}
@@ -255,51 +217,12 @@ function Store(props) {
                         renderSectionHeader={({ section: { title } }) => (
                             <Text style={styles.headerSection}>{title}</Text>
                         )}
-                        onScroll={(e) => {
-                            let currentY = e.nativeEvent.contentOffset.y
-                            let velocity = e.nativeEvent.velocity.y
-
-                            if (currentY < 108) {
-
-                                opacityHeaderMenu.value = currentY / 108
-                                opacityBanner.value = (108 - currentY) / 108
-                                // Animated.parallel([
-                                //     Animated.timing(opacityHeaderMenu, {
-                                //         toValue: 0,
-                                //         duration: 300,
-                                //         useNativeDriver: false
-                                //     }),
-                                //     Animated.timing(opacityBanner, {
-                                //         toValue: 1,
-                                //         duration: 300,
-                                //         useNativeDriver: false
-                                //     })
-                                // ]).start()
-
-                            } else {
-                                opacityHeaderMenu.value = 1
-                                opacityBanner.value = 0
-                            }
-
-                            // Animated.parallel([
-                            //     Animated.timing(opacityHeaderMenu, {
-                            //         toValue: 1,
-                            //         duration: 300,
-                            //         useNativeDriver: false
-                            //     }),
-                            //     Animated.timing(opacityBanner, {
-                            //         toValue: 0,
-                            //         duration: 300,
-                            //         useNativeDriver: false
-                            //     })
-                            // ]).start()
-
-                        }}
+                        onScroll={onScrollSectionFoods}
                         contentContainerStyle={props.cart.length !== 0 ? { paddingBottom: 60 } : { paddingBottom: 0 }}
                         ListHeaderComponent={
                             <HeaderStore store={store} distance={distance} />
                         }
-                        {...panResponder.panHandlers}
+                    // {...panResponder.panHandlers}
                     />
 
                 </Screen>
