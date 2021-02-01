@@ -35,7 +35,7 @@ function MapContainer() {
                     longitudeDelta: 0.003
                 });
             }
-        );
+        ).catch(err => console.log(err));
     }
 
     function getCoordsFromName(loc) {
