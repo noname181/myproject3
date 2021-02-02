@@ -35,6 +35,7 @@ function Detail(props) {
     }, []);
 
     const onLoadMore = index => {
+        console.log(index)
         setLoadMore(true);
         listCategory[index].page += 1;
         axios.get('https://restfull-api-nodejs-mongodb.herokuapp.com/stores/' + listCategory[index].key + '/' + listCategory[index].page * 10).then(res => {
@@ -77,8 +78,11 @@ function Detail(props) {
             }}
             onEndReachedThreshold={0.1}
             onEndReached={({ distanceFromEnd }) => {
-                if (distanceFromEnd < 0) return;
-                onLoadMore(index);
+
+                if (distanceFromEnd < 0)
+                    return;
+                else if (distanceFromEnd > 0)
+                    onLoadMore(index);
             }}
             renderItem={({ item }) =>
                 <FoodItemVertical
@@ -340,7 +344,6 @@ const styles = StyleSheet.create({
     },
     foodList: {
         top: 38,
-        height: height - 38,
         width: '100%',
     },
 });

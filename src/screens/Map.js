@@ -21,7 +21,7 @@ function Map(props) {
     const [distance, setDistance] = useState()
     const [address, setAddress] = useState()
     const [coords, setCoords] = useState()
-    const [status, setStatus] = useState()
+    const [status, setStatus] = useState(false)
 
     const [currentLocation, setCurrentLocation] = useState({
         latitude: 10.824993074806187,
@@ -66,6 +66,7 @@ function Map(props) {
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 })
+
             },
             error => {
                 console.log(error)
@@ -121,11 +122,10 @@ function Map(props) {
                 }
             })
             setCoords(coords)
-            setStatus('true')
+            setStatus(true)
             return coords
         } catch (error) {
-            setStatus('false')
-            alert(error)
+            setStatus(false)
             return error
         }
     }
@@ -142,8 +142,9 @@ function Map(props) {
 
     useEffect(() => {
 
-        favouriteList.length > 0 ? getDirections(null, `${favouriteList[0].coordinate.lat},${favouriteList[0].coordinate.lng}`) : setCoords([])
+        favouriteList.length > 0 ? getDirections(null, `${favouriteList[0].coordinate.lat},${favouriteList[0].coordinate.lng}`) : setStatus(false)
     }, [props.stores, props.currentLocation, favouriteList, isFocused])
+    console.log(status)
 
     const favouriteList = authContext.user ? props.stores.filter((value, index) => {
         return authContext.user.favouriteRestaurent?.includes(value._id)
@@ -226,10 +227,10 @@ function Map(props) {
                         </Marker>
                     )) : null}
 
-                    {currentLocation.latitude && currentLocation.longitude && status && <MapView.Polyline
+                    {status ? <MapView.Polyline
                         coordinates={coords}
                         strokeWidth={4}
-                        strokeColor="#f74f2d" />
+                        strokeColor="#f74f2d" /> : null
 
                     }
                 </MapView>
