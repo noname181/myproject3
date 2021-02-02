@@ -156,7 +156,7 @@ function Map(props) {
 
             <View style={{ zIndex: 1 }}>
                 <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-                {address && distance && <Text style={styles.info}>{address + '\n Khoảng cách: ' + distance}</Text>}
+                {address && distance && status && <Text style={styles.info}>{address + '\n Khoảng cách: ' + distance}</Text>}
                 {/* <Header style={{ borderBottomWidth: 0 }}>DETAILS</Header> */}
                 {/* <View style={styles.myInput}>
                     <TextInput numberOfLines={1} style={styles.input} placeholder="Tìm kiếm địa chỉ..." value={search} placeholderTextColor='gray' onChangeText={value => setSearch(value)} selection={{ start: 0 }} autoCorrect={false} />
