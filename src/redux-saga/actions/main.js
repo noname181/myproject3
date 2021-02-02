@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 
 const listCategory = [
-    { id: 1, name: "All", key: "all", page: 1 }, { id: 2, name: "Foods", key: "foods", page: 1 }, { id: 3, name: "Drink", key: "drink", page: 1 }, { id: 4, name: "Rice", key: "rice", page: 1 }, { id: 5, name: "Coffee", key: "coffee", page: 1 }, { id: 6, name: "Sushi", key: "sushi", page: 1 }, { id: 7, name: "Pizza/Burger", key: "pizza,burger", page: 1 }, { id: 8, name: "Spaghetti", key: "spaghetti", page: 1 }, { id: 9, name: "Healthy", key: "healthy", page: 1 }
+    { id: 1, name: "All", key: "all", page: 1 }, { id: 2, name: "Foods", key: "foods", page: 1 }, { id: 3, name: "Drink", key: "drink", page: 1 }, { id: 4, name: "Rice", key: "rice", page: 1 }, { id: 5, name: "Coffee", key: "coffee", page: 1 }, { id: 6, name: "Sushi", key: "sushi", page: 1 }, { id: 7, name: "Pizza/Burger", key: "pizza,burger", page: 1 }, { id: 8, name: "Spaghetti", key: "spaghetti", page: 1 }, { id: 9, name: "Healthy", key: "healthy", page: 1 }, { id: 10, name: "Fried Chicken", key: "fried chicken", page: 1 }
 ]
 
 export const getStoreRequest = (payload) => {

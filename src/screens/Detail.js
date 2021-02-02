@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ScrollView, FlatList, Text, Animated, Image, ImageBackground, Buttonm, Platform, ActivityIndicator, StatusBar, Dimensions, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Screen from '../components/Screen';
-import Header from '../components/Header';
-import FoodItemVertical from '../components/FoodItemVertical';
-import ListItemSeparator from '../components/ListItemSeparator';
+import { Screen, Header, Backdrop, ListItemSeparator, FoodItemVertical, MyStatusBar } from '../components'
 import { useNavigation } from '@react-navigation/native';
-import Backdrop from "../components/Backdrop";
-import RadioButton from '../components/RadioButton';
 import RadioButtonRN from 'radio-buttons-react-native';
-import MyStatusBar from '../components/MyStatusBar';
 import Carousel from 'react-native-snap-carousel';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -44,12 +38,99 @@ function Detail(props) {
         setLoadMore(true);
         listCategory[index].page += 1;
         axios.get('https://restfull-api-nodejs-mongodb.herokuapp.com/stores/' + listCategory[index].key + '/' + listCategory[index].page * 10).then(res => {
-            let listNew = [...storesCategory];
+            let listNew = storesCategory;
             listNew[index] = res.data;
-            setStoresCategory(listNew);
-            setLoadMore(false);
+            setTimeout(() => {
+                setStoresCategory(listNew);
+                setLoadMore(false);
+            }, 1000);
         })
     }
+
+    const _renderMenu = ({ item, index }) => (
+        <TouchableOpacity
+            style={selectedItem === item.id ? [styles.item, styles.active] : styles.item}
+            onPress={() => {
+                setSelectedItem(item.id);
+                carousel.current.snapToItem(index, animated = true);
+                menu.current.scrollToIndex({ animated: true, index: index, viewPosition: 0.5 });
+            }}
+        >
+            <Text style={selectedItem === item.id ? { color: 'white', fontWeight: 'bold' } : { color: '#000' }}>{item.name}</Text>
+        </TouchableOpacity>
+    )
+
+    const _renderItemCarousel = ({ item, index }) => {
+        return <FlatList
+            refreshing={false}
+            style={styles.foodList}
+            data={storesCategory[index]}
+            extraData={props}
+            keyExtractor={food => food._id.toString()}
+            snapToAlignment="center"
+            scrollEventThrottle={16}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 38 }}
+            onRefresh={() => {
+                setTimeout(() => { }, 500)
+                return;
+            }}
+            onEndReachedThreshold={0.1}
+            onEndReached={({ distanceFromEnd }) => {
+                if (distanceFromEnd < 0) return;
+                onLoadMore(index);
+            }}
+            renderItem={({ item }) =>
+                <FoodItemVertical
+                    name={item.name}
+                    address={item.address}
+                    image={item.banner}
+                    distance={item.distance}
+                    id={item._id}
+                    type={"store"}
+                />
+            }
+            ItemSeparatorComponent={ListItemSeparator}
+            ListEmptyComponent={<View style={{ alignItems: 'center', flex: 1, height: 500, justifyContent: 'center' }}>
+                <Image source={require('../assets/images/empty.png')}></Image>
+            </View>}
+            ListFooterComponent={loadMore ? <View
+                style={{
+                    paddingBottom: 15,
+
+                }}
+            >
+                <ActivityIndicator animating size="large" color="#f75f2d" />
+            </View> : null}
+        />
+    }
+
+
+
+    const onMenuScrollFailed = info => {
+        const wait = new Promise(resolve => setTimeout(resolve, 500));
+        wait.then(() => {
+            menu.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 0.5 });
+        });
+    }
+
+    const carouselScrollOnStart = () => {
+        setTimeout(() => {
+            menu.current?.scrollToIndex({ index: selectedItem - 1, animated: true, viewPosition: 0.5 });
+        }, 0)
+
+    }
+    const onCarouselSnap = index => {
+        setSelectedItem(index + 1);
+        menu.current.scrollToIndex({ animated: true, index: index, viewPosition: 0.5 });
+    }
+    const onCarouselFailed = info => {
+        const wait = new Promise(resolve => setTimeout(resolve, 500));
+        wait.then(() => {
+            carousel.current?.scrollToIndex({ index: info.index, animated: true });
+        });
+    }
+
     const handleOpen = () => {
         setVisible(true);
     };
@@ -57,6 +138,15 @@ function Detail(props) {
     const handleClose = () => {
         setVisible(false);
     };
+
+    const beforeClose = () => {
+        navigation.dangerouslyGetParent().setOptions({
+            tabBarVisible: true
+        });
+        setTimeout(() => {
+            onSlideDown();
+        })
+    }
     const onSlideDown = () => {
         // Will change fadeAnim value to 0 in 5 seconds
         Animated.timing(slideDown, {
@@ -76,31 +166,14 @@ function Detail(props) {
                             ref={menu}
                             data={listCategory}
                             horizontal
-                            onScrollToIndexFailed={info => {
-                                const wait = new Promise(resolve => setTimeout(resolve, 500));
-                                wait.then(() => {
-                                    menu.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 0.5 });
-                                });
-                            }}
-                            getItemLayout={(data, index) => (
-                                { length: 50, offset: 50 * index, index }
-                            )}
+                            onScrollToIndexFailed={onMenuScrollFailed}
+                            // getItemLayout={(data, index) => (
+                            //     { length: 50, offset: 50 * index, index }
+                            // )}
                             contentContainerStyle={{ overflow: 'visible', borderLeftWidth: 20, borderColor: '#fff' }}
                             showsHorizontalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item, index }) =>
-                                <TouchableOpacity
-                                    style={selectedItem === item.id ? [styles.item, styles.active] : styles.item}
-                                    onPress={() => {
-                                        setSelectedItem(item.id);
-                                        carousel.current.snapToItem(index, animated = true);
-                                        menu.current.scrollToIndex({ animated: true, index: index, viewPosition: 0 });
-                                    }}
-                                >
-                                    <Text style={selectedItem === item.id ? { color: 'white', fontWeight: 'bold' } : { color: '#000' }}>{item.name}</Text>
-                                </TouchableOpacity>
-
-                            }
+                            renderItem={_renderMenu}
                         />
                     </View>
 
@@ -128,68 +201,10 @@ function Detail(props) {
                         itemWidth={width}
                         firstItem={selectedItem - 1}
                         initialNumToRender={listCategory.length}
-                        onScrollToIndexFailed={info => {
-                            const wait = new Promise(resolve => setTimeout(resolve, 500));
-                            wait.then(() => {
-                                carousel.current?.scrollToIndex({ index: info.index, animated: true });
-                            });
-                        }}
-                        onLayout={() => {
-                            setTimeout(() => {
-                                menu.current?.scrollToIndex({ index: selectedItem - 1, animated: true, viewPosition: 0 });
-                            }, 0)
-
-                        }}
-                        onSnapToItem={index => {
-                            setSelectedItem(index + 1);
-                            menu.current.scrollToIndex({ animated: true, index: index, viewPosition: 0 });
-                        }}
-                        renderItem={({ item, index }) => {
-                            return <FlatList
-                                refreshing={false}
-                                style={styles.foodList}
-                                data={storesCategory[index]}
-                                extraData={props}
-                                keyExtractor={food => food._id.toString()}
-                                snapToAlignment="center"
-                                scrollEventThrottle={16}
-                                showsVerticalScrollIndicator={false}
-                                contentContainerStyle={{ paddingBottom: 38 }}
-                                onRefresh={() => {
-                                    setTimeout(() => { }, 500)
-                                    return;
-                                }}
-                                onEndReachedThreshold={0.1}
-                                onEndReached={({ distanceFromEnd }) => {
-                                    if (distanceFromEnd < 0) return;
-                                    onLoadMore(index);
-                                }}
-                                renderItem={({ item }) =>
-                                    <FoodItemVertical
-                                        name={item.name}
-                                        address={item.address}
-                                        image={item.banner}
-                                        distance={item.distance}
-                                        id={item._id}
-                                        type={"store"}
-                                    />
-                                }
-                                ItemSeparatorComponent={ListItemSeparator}
-                                ListEmptyComponent={<View style={{ alignItems: 'center', flex: 1, height: 500, justifyContent: 'center' }}>
-                                    <Image source={require('../assets/images/empty.png')}></Image>
-                                </View>}
-                                ListFooterComponent={loadMore ? <View
-                                    style={{
-                                        paddingBottom: 15,
-
-                                    }}
-                                >
-                                    <ActivityIndicator animating size="large" color="#f75f2d" />
-                                </View> : null}
-                            />
-                        }
-
-                        }
+                        onScrollToIndexFailed={onCarouselFailed}
+                        onLayout={carouselScrollOnStart}
+                        onSnapToItem={onCarouselSnap}
+                        renderItem={_renderItemCarousel}
                         loop={false}
                         autoplay={false}
                     />
@@ -201,14 +216,7 @@ function Detail(props) {
                     visible={visible}
                     handleOpen={handleOpen}
                     handleClose={handleClose}
-                    beforeClose={() => {
-                        navigation.dangerouslyGetParent().setOptions({
-                            tabBarVisible: true
-                        });
-                        setTimeout(() => {
-                            onSlideDown();
-                        })
-                    }}
+                    beforeClose={beforeClose}
                     swipeConfig={{
                         velocityThreshold: 0.3,
                         directionalOffsetThreshold: 80,
@@ -387,7 +395,7 @@ const dishList = [
     }
 ];
 const listCategory = [
-    { id: 1, name: "All", key: "all", page: 1 }, { id: 2, name: "Foods", key: "foods", page: 1 }, { id: 3, name: "Drink", key: "drink", page: 1 }, { id: 4, name: "Rice", key: "rice", page: 1 }, { id: 5, name: "Coffee", key: "coffee", page: 1 }, { id: 6, name: "Sushi", key: "sushi", page: 1 }, { id: 7, name: "Pizza/Burger", key: "pizza,burger", page: 1 }, { id: 8, name: "Spaghetti", key: "spaghetti", page: 1 }, { id: 9, name: "Healthy", key: "healthy", page: 1 }
+    { id: 1, name: "All", key: "all", page: 1 }, { id: 2, name: "Foods", key: "foods", page: 1 }, { id: 3, name: "Drink", key: "drink", page: 1 }, { id: 4, name: "Rice", key: "rice", page: 1 }, { id: 5, name: "Coffee", key: "coffee", page: 1 }, { id: 6, name: "Sushi", key: "sushi", page: 1 }, { id: 7, name: "Pizza/Burger", key: "pizza,burger", page: 1 }, { id: 8, name: "Spaghetti", key: "spaghetti", page: 1 }, { id: 9, name: "Healthy", key: "healthy", page: 1 }, { id: 10, name: "Fried Chicken", key: "fried chicken", page: 1 }
 ]
 
 const foodList = [

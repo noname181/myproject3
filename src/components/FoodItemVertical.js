@@ -10,7 +10,7 @@ function FoodItem(props) {
     const navigate = props.type === 'product' ? "ProductDetail" : "Store";
 
     return (
-        <Pressable onPress={() => navigation.navigate(navigate, {
+        <TouchableOpacity onPress={() => navigation.navigate(navigate, {
             id: props.id
         })} >
             <View style={styles.container}>
@@ -32,7 +32,7 @@ function FoodItem(props) {
 
             </View>
 
-        </Pressable>
+        </TouchableOpacity>
     );
 }
 

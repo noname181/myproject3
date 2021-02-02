@@ -85,7 +85,7 @@ function Notification(props) {
                     onPress={() => console.log('Element touched')}
                     underlayColor={'#aaa'}>
                     <View style={{ height: '100%', alignItems: 'center', flexDirection: 'row' }}>
-                        <Ionicons name="ios-notifications" size={60} color="#f75f2d" />
+                        <Ionicons name="ios-notifications" size={40} color="#f75f2d" />
                         <View style={{ flex: 1, paddingHorizontal: 10 }}>
                             <Text style={styles.title} numberOfLines={1}>
                                 {data.item.title}

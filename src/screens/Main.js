@@ -1,15 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { View, Text, StyleSheet, FlatList, ScrollView, Dimensions, Image, Button } from 'react-native'
-import Screen from '../components/Screen'
-import Header from '../components/Header'
-// import Carousel from '../components/Carousel/Carousel'
-import FoodItem from '../components/FoodItem'
-import Category from '../components/Category'
-import LoadingChild from '../components/LoadingChild'
-import FoodItemVertical from '../components/FoodItemVertical'
+import { Screen, Header, FoodItem, Category, LoadingChild, FoodItemVertical, MyStatusBar } from '../components'
 import { useFocusEffect, CommonActions } from '@react-navigation/native'
 import Carousel from 'react-native-snap-carousel'
-import MyStatusBar from '../components/MyStatusBar'
 import * as actions from '../redux-saga/actions/main'
 import { connect } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
@@ -53,7 +46,7 @@ function Main(props) {
     }, [])
 
 
-    function _renderItem({ item, index }) {
+    function _renderBanner({ item, index }) {
         return (
             <View style={{
                 backgroundColor: 'floralwhite',
@@ -68,7 +61,7 @@ function Main(props) {
 
         )
     }
-    function _renderItem2({ item, index }) {
+    function _renderPromo({ item, index }) {
         return (
             <View style={{
                 backgroundColor: '#fff',
@@ -83,6 +76,37 @@ function Main(props) {
             </View>
 
         )
+    }
+
+    function _renderCategory({ item }) {
+        return (<Category
+            name={item.label}
+            image={item.image}
+            keys={item.key}
+        />)
+    }
+
+    function _renderStoreOne({ item }) {
+        return <FoodItem
+            id={item._id}
+            name={item.name}
+            price={item.price}
+            image={item.banner}
+            description={item.description}
+            distance={item.distance}
+            promo={item.promo}
+            star={4.5}
+            topView={true}
+        />
+    }
+
+    function _renderStoreTwo({ item }) {
+        return <FoodItem
+            name={item.name}
+            price={item.price}
+            image={item.image}
+            distance={50.5}
+        />
     }
 
     requestLocationPermission = async () => {
@@ -126,17 +150,47 @@ function Main(props) {
         )
     }
 
-    let storeSorted = stores ? stores.sort((a, b) => {
-        if (a.distance < b.distance)
-            return -1;
-        else
-            return 1;
-    }) : props.stores.sort((a, b) => {
+    let storeSortedByDistance = stores ? stores : props.stores
+
+    storeSortedByDistance.sort((a, b) => {
         if (a.distance < b.distance)
             return -1;
         else
             return 1;
     })
+
+    let listStoreDeal = storeSortedByDistance.length == 0 ?
+        <View>
+            <LoadingChild style={{ height: 246, backgroundColor: '#fff' }}></LoadingChild>
+        </View>
+        :
+        <FlatList
+            style={styles.foodList}
+            data={storeSortedByDistance}
+            keyExtractor={food => food._id.toString()}
+            horizontal
+            snapToAlignment="center"
+            scrollEventThrottle={16}
+            showsHorizontalScrollIndicator={false}
+            renderItem={_renderStoreOne}
+        />
+
+    let listStoreSorted = storeSortedByDistance.length == 0 ?
+        <LoadingChild style={{ height: 224, backgroundColor: '#fff' }}></LoadingChild>
+        :
+        (
+            storeSortedByDistance.map((value, index) => {
+                return <FoodItemVertical
+                    id={value._id}
+                    key={index}
+                    name={value.name}
+                    description={value.description}
+                    image={value.banner}
+                    distance={value.distance}
+                    promo={value.promo}
+                />
+            })
+        )
 
 
 
@@ -153,7 +207,7 @@ function Main(props) {
                         data={bannerSlide}
                         sliderWidth={width}
                         itemWidth={width - 60}
-                        renderItem={_renderItem}
+                        renderItem={_renderBanner}
                         loop={true}
                         autoplay={true}
                         autoplayInterval={3000}
@@ -171,13 +225,7 @@ function Main(props) {
                             snapToAlignment="center"
                             scrollEventThrottle={16}
                             showsHorizontalScrollIndicator={false}
-                            renderItem={({ item }) =>
-                                <Category
-                                    name={item.label}
-                                    image={item.image}
-                                    keys={item.key}
-                                />
-                            }
+                            renderItem={_renderCategory}
                         />
                         <FlatList
                             style={styles.dishList}
@@ -187,46 +235,13 @@ function Main(props) {
                             snapToAlignment="center"
                             scrollEventThrottle={16}
                             showsHorizontalScrollIndicator={false}
-                            renderItem={({ item }) =>
-                                <Category
-                                    name={item.label}
-                                    image={item.image}
-                                    keys={item.key}
-                                />
-                            }
+                            renderItem={_renderCategory}
                         />
                     </View>
                     <View>
                         <Text style={styles.title}>Deal Hot quanh đây</Text>
-
-
                         {
-                            storeSorted.length == 0 ?
-                                <View>
-                                    <LoadingChild style={{ height: 246, backgroundColor: '#fff' }}></LoadingChild>
-                                </View> :
-                                <FlatList
-                                    style={styles.foodList}
-                                    data={storeSorted}
-                                    keyExtractor={food => food._id.toString()}
-                                    horizontal
-                                    snapToAlignment="center"
-                                    scrollEventThrottle={16}
-                                    showsHorizontalScrollIndicator={false}
-                                    renderItem={({ item }) =>
-                                        <FoodItem
-                                            id={item._id}
-                                            name={item.name}
-                                            price={item.price}
-                                            image={item.banner}
-                                            description={item.description}
-                                            distance={item.distance}
-                                            promo={item.promo}
-                                            star={4.5}
-                                            topView={true}
-                                        />
-                                    }
-                                />
+                            listStoreDeal
                         }
 
                     </View>
@@ -237,7 +252,7 @@ function Main(props) {
                             data={bannerPromo}
                             sliderWidth={width}
                             itemWidth={width / 2}
-                            renderItem={_renderItem2}
+                            renderItem={_renderPromo}
                             loop={true}
                             autoplay={true}
                             autoplayInterval={3000}
@@ -254,15 +269,7 @@ function Main(props) {
                             snapToAlignment="center"
                             scrollEventThrottle={16}
                             showsHorizontalScrollIndicator={false}
-                            renderItem={({ item }) =>
-                                <FoodItem
-                                    name={item.name}
-                                    price={item.price}
-                                    image={item.image}
-                                    distance={50.5}
-
-                                />
-                            }
+                            renderItem={_renderStoreTwo}
                         />
                         <FlatList
                             style={styles.foodList2}
@@ -272,31 +279,13 @@ function Main(props) {
                             snapToAlignment="center"
                             scrollEventThrottle={16}
                             showsHorizontalScrollIndicator={false}
-                            renderItem={({ item }) =>
-                                <FoodItem
-                                    name={item.name}
-                                    price={item.price}
-                                    image={item.image}
-                                    distance={50.5}
-                                />
-                            }
+                            renderItem={_renderStoreTwo}
                         />
                     </View>
 
                     <Text style={styles.title2}>Quán ngon quận mình</Text>
                     {
-                        storeSorted.length == 0 ? <LoadingChild style={{ height: 224, backgroundColor: '#fff' }}></LoadingChild> : (
-                            storeSorted.map((value, index) => {
-                                return <FoodItemVertical
-                                    id={value._id}
-                                    key={index}
-                                    name={value.name}
-                                    description={value.description}
-                                    image={value.banner}
-                                    distance={value.distance}
-                                    promo={value.promo}
-                                />
-                            }))
+                        listStoreSorted
                     }
 
                 </View>
@@ -497,23 +486,28 @@ const dishList = [
     },
     {
         image: 'Layer5',
-        label: 'Món nướng'
+        label: 'Món nướng',
+        key: '10'
     },
     {
         image: 'Layer6',
-        label: 'Tráng miệng'
+        label: 'Tráng miệng',
+        key: '10'
     },
     {
         image: 'Layer7',
-        label: 'Hải sản'
+        label: 'Hải sản',
+        key: '10'
     },
     {
         image: 'Layer8',
-        label: 'Tươi sống'
+        label: 'Tươi sống',
+        key: '10'
     },
     {
         image: 'Layer10',
-        label: 'Món Hàn'
+        label: 'Món Hàn',
+        key: '10'
     }
 ]
 
@@ -521,7 +515,7 @@ const dishList2 = [
     {
         image: 'Layer6',
         label: 'Fried Chicken',
-        key: '1'
+        key: '10'
     },
     {
         image: 'Layer13',
