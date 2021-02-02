@@ -98,7 +98,7 @@ function Detail(props) {
             ListEmptyComponent={<View style={{ alignItems: 'center', flex: 1, height: 500, justifyContent: 'center' }}>
                 <Image source={require('../assets/images/empty.png')}></Image>
             </View>}
-            ListFooterComponent={loadMore ? <View
+            ListFooterComponent={loadMore && selectedItem === index ? <View
                 style={{
                     paddingBottom: 15,
 
