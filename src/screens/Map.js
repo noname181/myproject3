@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import { Text, StyleSheet, Platform, View, Image, Dimensions, TextInput, ImageBackground } from 'react-native'
+import { Text, StyleSheet, Platform, View, Image, Dimensions, TextInput, ImageBackground, StatusBar } from 'react-native'
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps'
 import Header from '../components/Header'
 import Geolocation from '@react-native-community/geolocation'
@@ -34,45 +34,46 @@ function Map(props) {
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        requestLocationPermission()
+        // requestLocationPermission()
         return () => {
         }
     }, [])
 
-    requestLocationPermission = async () => {
-        if (Platform.OS === 'ios') {
-            var respone = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
-            if (respone === 'granted')
-                locateCurrentPosition()
-        } else {
-            var respone = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
-            if (respone === 'granted')
-                locateCurrentPosition()
-        }
-    }
+    // requestLocationPermission = async () => {
+    //     if (Platform.OS === 'ios') {
+    //         var respone = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+    //         if (respone === 'granted')
+    //             locateCurrentPosition()
+    //     } else {
+    //         var respone = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+    //         if (respone === 'granted')
+    //             locateCurrentPosition()
+    //     }
+    // }
 
-    function locateCurrentPosition() {
-        Geolocation.getCurrentPosition(
-            position => {
-                map.current.animateToRegion({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                }, 1500)
-                setCurrentLocation({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                })
+    // function locateCurrentPosition() {
+    //     Geolocation.getCurrentPosition(
+    //         position => {
+    //             map.current.animateToRegion({
+    //                 latitude: position.coords.latitude,
+    //                 longitude: position.coords.longitude,
+    //                 latitudeDelta: 0.0922,
+    //                 longitudeDelta: 0.0421,
+    //             }, 1500)
+    //             setCurrentLocation({
+    //                 latitude: position.coords.latitude,
+    //                 longitude: position.coords.longitude,
+    //                 latitudeDelta: 0.0922,
+    //                 longitudeDelta: 0.0421,
+    //             })
 
-            },
-            error => {
-                console.log(error)
-            }
-        )
-    }
+    //         },
+    //         error => {
+    //             console.log(error)
+    //         }
+    //     )
+    // }
+
     function onRegionChange(region) {
 
     }
@@ -265,7 +266,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Map)
 const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
-        marginTop: 20
+        marginTop: StatusBar.currentHeight ? StatusBar.currentHeight : 20
     },
     container: {
         ...StyleSheet.absoluteFillObject

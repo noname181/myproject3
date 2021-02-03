@@ -41,7 +41,7 @@ function Main(props) {
 
     useEffect(() => {
         AsyncStorage.getItem('stores').then((res) => {
-            setStores(JSON.parse(res).data)
+            res ? setStores(JSON.parse(res).data) : null
         })
         props.getStoreCategory()
 

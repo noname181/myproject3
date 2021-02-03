@@ -19,26 +19,11 @@ function MapContainer(props) {
     const map = useRef()
 
     useEffect(() => {
-
-        getInitialState();
         Geocoder.init("AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU", { language: "us" });
 
         return () => {
         };
     }, []);
-
-    function getInitialState() {
-        getLocation().then(
-            (data) => {
-                setRegion({
-                    latitude: data.latitude,
-                    longitude: data.longitude,
-                    latitudeDelta: 0.003,
-                    longitudeDelta: 0.003
-                });
-            }
-        ).catch(err => console.log(err));
-    }
 
     function getCoordsFromName(loc) {
         setTyping(false);
@@ -73,7 +58,6 @@ function MapContainer(props) {
     }
 
     const onChangeValue = (e) => {
-
         setAddress(e.nativeEvent.text)
     }
 

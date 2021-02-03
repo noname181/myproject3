@@ -23,7 +23,7 @@ export function DrawerContent(props) {
                 <View style={{}}>
                     <Text style={{ fontWeight: 'bold', marginBottom: 10, fontSize: 20, color: 'white' }}>{authContext.user ? authContext.user['name'] : null} </Text>
                     <View style={{ flexDirection: 'row' }}>
-                        <Icon name="phone" size={16} color="#f75f2d" />
+                        <MaterialCommunityIcons name="phone" size={16} color="#f75f2d" />
                         <Text style={{ fontWeight: 'bold', marginLeft: 8, fontSize: 12, color: "white" }}>081-952-1414</Text>
                     </View>
 
