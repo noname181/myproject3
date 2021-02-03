@@ -6,6 +6,7 @@ import socketIO from './socketIO'
 import storesCategoryReducer from './storesCategory'
 import cartReducer from './cart'
 import currentLocationReducer from './currenLocationReducer'
+import currentAddressReducer from './currentAddressReducer'
 
 // Redux: Root Reducer
 const rootReducer = combineReducers({
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     socket: socketIO,
     storesCategory: storesCategoryReducer,
     cart: cartReducer,
-    currentLocation: currentLocationReducer
+    currentLocation: currentLocationReducer,
+    currentAddress: currentAddressReducer
 });
 // Exports
 export default rootReducer

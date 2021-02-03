@@ -3,7 +3,6 @@ import { Dimensions } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from '../navigation/DrawerContent';
 import TabNavigation from './TabNavigation';
-import GoogleAutocomplete from '../screens/GoogleAutocomplete';
 
 const Drawer = createDrawerNavigator();
 const width = Dimensions.get('window').width;
@@ -27,7 +26,6 @@ function DrawerNavigation(props) {
 
         >
             <Drawer.Screen name="Tab" component={TabNavigation} />
-            <Drawer.Screen name="Autocomplete" component={GoogleAutocomplete} />
         </Drawer.Navigator>
     );
 }

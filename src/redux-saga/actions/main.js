@@ -51,11 +51,17 @@ export const getStoresCategory = (payload) => {
     }
 }
 
-export const getCurrentLocation = (payload) => {
+export const setCurrentLocation = (payload) => {
     return {
         type: types.CURRENT_LOCATION,
         payload
     }
 }
 
+export const setCurrentAddress = (payload) => {
+    return {
+        type: types.CURRENT_ADDRESS,
+        payload
+    }
+}
 

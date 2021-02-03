@@ -12,10 +12,12 @@ import Images from '../assets/images/Images'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import Geocoder from 'react-native-geocoding'
 
 const width = Dimensions.get('window').width
 
 function Main(props) {
+    Geocoder.init("AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU", { language: "vi" })
     const [stores, setStores] = useState()
     // useFocusEffect(
     //     React.useCallback(() => {
@@ -127,14 +129,17 @@ function Main(props) {
     function locateCurrentPosition() {
         Geolocation.getCurrentPosition(
             position => {
-                props.getCurrentLocation({
+                let location = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
-                })
-                props.getAllStore({
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                })
+                }
+                props.setCurrentLocation(location)
+                props.getAllStore(location)
+                Geocoder.from(location)
+                    .then(json => {
+                        props.setCurrentAddress(json.results[0].formatted_address)
+                    })
+                    .catch(error => console.warn(error))
             },
             error => {
                 // console.log(error)
@@ -195,17 +200,17 @@ function Main(props) {
             })
         )
 
-
-
     return (
         <Screen style={styles.container}>
             <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
             {/* <Header isHome={true}>HOME</Header> */}
             <ScrollView stickyHeaderIndices={[0]}>
                 <View style={{ backgroundColor: '#fff' }}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Autocomplete')} style={{ flexDirection: 'row', height: 30, alignItems: 'center', paddingHorizontal: 15 }}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('GoogleAutocomplete')} style={{ flexDirection: 'row', height: 30, alignItems: 'center', paddingHorizontal: 15 }}>
                         <MaterialCommunityIcons name="map-marker" color="#f75f2d" size={20} />
-                        <Text style={{ flex: 1, marginHorizontal: 10, fontSize: 16 }} numberOfLines={1}>36/14/4 Bình Lợi, Phường 13, Quận Bình Thạnh</Text>
+                        <Text style={{ flex: 1, marginHorizontal: 10, fontSize: 16 }} numberOfLines={1}>
+                            {props.address ? props.address : 'Locating places...'}
+                        </Text>
                         <MaterialCommunityIcons name="chevron-right" color="#000" size={20} />
                     </TouchableOpacity>
                     <View style={styles.inputIcon}>
@@ -380,7 +385,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
-        stores: state.stores
+        stores: state.stores,
+        address: state.currentAddress,
+        location: state.currentLocation
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -391,8 +398,11 @@ const mapDispatchToProps = (dispatch) => {
         getStoreCategory: function () {
             dispatch(actions.getStoresCategoryRequest())
         },
-        getCurrentLocation: function (location) {
-            dispatch(actions.getCurrentLocation(location))
+        setCurrentLocation: function (location) {
+            dispatch(actions.setCurrentLocation(location))
+        },
+        setCurrentAddress: function (address) {
+            dispatch(actions.setCurrentAddress(address))
         }
 
     }

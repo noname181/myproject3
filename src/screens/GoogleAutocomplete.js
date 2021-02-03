@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Dimensions, TouchableHighlight, Platform, StatusBar, TextInput, Image } from 'react-native';
+import { View, Dimensions, TouchableHighlight, Platform, StatusBar, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
 import MapInput from '../components/GoogleAutocomplete/MapInput';
 import MyMapView from '../components/GoogleAutocomplete/MapView';
 import { getLocation, geocodeLocationByName } from '../services/location-service';
 import MyStatusBar from '../components/MyStatusBar';
 import Geocoder from 'react-native-geocoding';
 import MapView, { Marker } from 'react-native-maps';
+import { connect } from 'react-redux'
 
 let height = Dimensions.get('window').height;
 let width = Dimensions.get('window').width;
 
-function MapContainer() {
+function MapContainer(props) {
     const [region, setRegion] = useState({});
     const [typing, setTyping] = useState(false);
     const [selection, setSelection] = useState({ start: 0, end: 0 });
@@ -18,6 +19,7 @@ function MapContainer() {
     const map = useRef()
 
     useEffect(() => {
+
         getInitialState();
         Geocoder.init("AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU", { language: "us" });
 
@@ -25,11 +27,9 @@ function MapContainer() {
         };
     }, []);
 
-
     function getInitialState() {
         getLocation().then(
             (data) => {
-                console.log(data);
                 setRegion({
                     latitude: data.latitude,
                     longitude: data.longitude,
@@ -56,7 +56,6 @@ function MapContainer() {
                 let geometry = json.results[0].geometry.location;
                 // setCenterLocation({ latitude: geometry.lat, longitude: geometry.lng })
                 setAddress(address);
-                console.log(address);
             })
             .catch(error => console.warn(error));
     }
@@ -84,47 +83,94 @@ function MapContainer() {
     }
 
     return (
-        <View style={{ flex: 1 }}>
-            <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-            <TouchableHighlight style={{ position: 'absolute', top: Platform.OS == 'android' ? StatusBar.currentHeight : 20, left: 0, width: '100%', zIndex: 3, elevation: 3, backgroundColor: 'white' }}>
-                <MapInput
-                    notifyChange={(loc) => getCoordsFromName(loc)}
-                    focus={focus}
-                    blur={() => {
-                        setTyping(false);
-                        setSelection({ start: 0, end: 0 });
-                    }}
-                    onRegionChange={onMapRegionChange}
-                    selection={selection}
-                    value={address}
-                    changeValue={onChangeValue}
-                />
+        props.location ?
+            <View style={{ flex: 1 }}>
+                <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
+                <TouchableHighlight style={{ position: 'absolute', top: Platform.OS == 'android' ? StatusBar.currentHeight : 20, left: 0, width: '100%', zIndex: 3, elevation: 3, backgroundColor: 'white' }}>
+                    <MapInput
+                        notifyChange={(loc) => getCoordsFromName(loc)}
+                        focus={focus}
+                        blur={() => {
+                            setTyping(false);
+                            setSelection({ start: 0, end: 0 });
+                        }}
+                        onRegionChange={onMapRegionChange}
+                        selection={selection}
+                        value={address}
+                        changeValue={onChangeValue}
+                    />
 
-            </TouchableHighlight>
+                </TouchableHighlight>
 
-            {
-                region['latitude'] && !typing ?
-                    <View style={{ position: 'absolute', height: height - 40, width: width, top: Platform.OS == 'android' ? StatusBar.currentHeight + 40 : 60, left: 0, zIndex: 2, elevation: 2 }}>
-                        <MapView
-                            style={{ flex: 1 }}
-                            initialRegion={region}
-                            // showsUserLocation={true}
-                            // showsMyLocationButton={true}
-                            onRegionChangeComplete={(reg) => onMapRegionChange(reg)}
-                            ref={map}
-                        >
+                {
+                    props.location && !typing ?
+                        <View style={{ position: 'absolute', height: height - 40, width: width, top: Platform.OS == 'android' ? StatusBar.currentHeight + 40 : 60, left: 0, zIndex: 2, elevation: 2 }}>
+                            <MapView
+                                style={{ flex: 1 }}
+                                initialRegion={{
+                                    latitude: props.location.lat,
+                                    longitude: props.location.lng,
+                                    latitudeDelta: 0.003,
+                                    longitudeDelta: 0.003
+                                }}
+                                // showsUserLocation={true}
+                                // showsMyLocationButton={true}
+                                onRegionChangeComplete={(reg) => onMapRegionChange(reg)}
+                                ref={map}
+                            >
 
-                            {/* <Marker coordinate={props.region} image={require('../../assets/images/marker.png')} /> */}
-                        </MapView>
+                                {/* <Marker coordinate={props.region} image={require('../../assets/images/marker.png')} /> */}
+                            </MapView>
 
-                        <Image resizeMode={'contain'} source={require('../assets/images/marker.png')} style={{ height: 40, width: 40, borderRadius: 25, position: 'absolute', top: (height - 120) / 2, right: (width - 40) / 2 }}></Image>
+                            <Image resizeMode={'contain'} source={require('../assets/images/marker.png')} style={{ height: 40, width: 40, borderRadius: 25, position: 'absolute', top: (height - 120) / 2, right: (width - 40) / 2 }}></Image>
 
-                    </View>
-                    : null
-            }
-        </View>
+                        </View>
+                        : null
+                }
+                <TouchableOpacity style={styles.cartBar} >
+                    <Text style={styles.cartText}>UPDATE ADDRESS</Text>
+                </TouchableOpacity>
+            </View> :
+            <Screen style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
+                <ActivityIndicator size="large" color="#f75f2d" />
+            </Screen>
     );
 
 }
 
-export default MapContainer;
+const styles = StyleSheet.create({
+    cartText: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    cartBar: {
+        width: width - 30,
+        borderRadius: 5,
+        height: 45,
+        backgroundColor: '#f75f2d',
+        marginHorizontal: 15,
+        position: 'absolute',
+        bottom: 15,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        elevation: 3,
+        zIndex: 3
+    }
+})
+
+const mapStateToProps = (state) => {
+    return {
+        location: state.currentLocation,
+        address: state.currentAddress
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapContainer)

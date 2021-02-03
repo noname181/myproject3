@@ -104,10 +104,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#f75f2d'
     },
-    cartText: {
-        color: '#fff',
-        fontWeight: 'bold'
-    },
     countProduct: {
         width: '100%',
         flexDirection: 'row',
@@ -132,6 +128,10 @@ const styles = StyleSheet.create({
         lineHeight: 37,
         fontSize: 20,
         color: '#f75f2d',
+        fontWeight: 'bold'
+    },
+    cartText: {
+        color: '#fff',
         fontWeight: 'bold'
     },
     cartBar: {

@@ -1,11 +1,11 @@
 import * as types from '../constants'
 
 // Initial State
-const initialState = {}
+const initialState = null
 // Redux: Counter Reducer
-const locationReducer = (state = initialState, action) => {
+const addressReducer = (state = initialState, action) => {
     switch (action.type) {
-        case types.CURRENT_LOCATION: {
+        case types.CURRENT_ADDRESS: {
             return action.payload
         }
         default: {
@@ -14,4 +14,4 @@ const locationReducer = (state = initialState, action) => {
     }
 };
 // Exports
-export default locationReducer
+export default addressReducer

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text, ImageBackground } from 'react-native';
 import {
     createDrawerNavigator,
@@ -6,17 +6,22 @@ import {
     DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
+import AuthContext from '../hooks/AuthContext';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export function DrawerContent(props) {
     const [route, setRoute] = useState('home');
+    const authContext = useContext(AuthContext);
+
     return (
         <DrawerContentScrollView {...props}>
-            <ImageBackground resizeMode='cover' source={{ uri: 'https://upanhnhanh.net/images/2019/02/18/hinh-nen-may-tinh-4.jpg' }} style={{ height: 200, width: '100%', marginTop: -24, borderBottomColor: "#e9e9e9", borderBottomWidth: 8, flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={require('../assets/images/avatar.jpg')} style={{ height: 80, width: 80, borderRadius: 40, marginHorizontal: 20 }}></Image>
+            <ImageBackground resizeMode='cover' source={{ uri: 'https://img.freepik.com/free-vector/neon-lights-wallpaper_52683-46462.jpg?size=626&ext=jpg' }} style={{ height: 200, width: '100%', marginTop: -24, borderBottomColor: "#e9e9e9", borderBottomWidth: 8, flexDirection: 'row', alignItems: 'center' }}>
+                <Image source={authContext.user ? { uri: 'https://svhutech.nonamee.com/upload/' + authContext.user['image'] } : require('../assets/images/avatar.jpg')} style={{ height: 80, width: 80, borderRadius: 40, marginHorizontal: 20 }}></Image>
                 <View style={{}}>
-                    <Text style={{ fontWeight: 'bold', marginBottom: 10, fontSize: 20, color: 'white' }}>Son Heung Min</Text>
+                    <Text style={{ fontWeight: 'bold', marginBottom: 10, fontSize: 20, color: 'white' }}>{authContext.user ? authContext.user['name'] : null} </Text>
                     <View style={{ flexDirection: 'row' }}>
                         <Icon name="phone" size={16} color="#f75f2d" />
                         <Text style={{ fontWeight: 'bold', marginLeft: 8, fontSize: 12, color: "white" }}>081-952-1414</Text>
@@ -31,7 +36,7 @@ export function DrawerContent(props) {
                     focused={route == 'home' ? true : false}
                     icon={({ color, size }) => (
                         <Icon
-                            name="home-outline"
+                            name="home"
                             color={color}
                             size={size}
                         />
@@ -43,13 +48,13 @@ export function DrawerContent(props) {
                         props.navigation.navigate('Main')
                     }}
                 />
-                <DrawerItem
+                {/* <DrawerItem
                     {...props}
                     style={styles.rows}
                     focused={route == 'login' ? true : false}
                     icon={({ color, size }) => (
                         <Icon
-                            name="account-outline"
+                            name="account"
                             color={color}
                             size={size}
                         />
@@ -59,14 +64,14 @@ export function DrawerContent(props) {
                         setRoute('login')
                         props.navigation.navigate('Login')
                     }}
-                />
+                /> */}
                 <DrawerItem
                     {...props}
                     style={styles.rows}
                     focused={route == 'notification' ? true : false}
                     icon={({ color, size }) => (
-                        <Icon
-                            name="bell-outline"
+                        <MaterialCommunityIcons
+                            name="bell"
                             color={color}
                             size={size}
                         />
@@ -83,7 +88,7 @@ export function DrawerContent(props) {
                     focused={route == 'wishlist' ? true : false}
                     icon={({ color, size }) => (
                         <Icon
-                            name="heart-outline"
+                            name="heart"
                             color={color}
                             size={size}
                         />
@@ -94,7 +99,7 @@ export function DrawerContent(props) {
                         props.navigation.navigate('Wishlist')
                     }}
                 />
-                <DrawerItem
+                {/* <DrawerItem
                     {...props}
                     style={styles.rows}
                     focused={route == 'autocomplete' ? true : false}
@@ -110,7 +115,7 @@ export function DrawerContent(props) {
                         setRoute('autocomplete')
                         props.navigation.navigate('Autocomplete')
                     }}
-                />
+                /> */}
             </View>
         </DrawerContentScrollView>
     );
