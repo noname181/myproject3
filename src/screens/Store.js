@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { View, StyleSheet, ScrollView, FlatList, Text, Image, ImageBackground, PanResponder, Platform, Dimensions, ActivityIndicator, StatusBar, SectionList, TouchableOpacity } from 'react-native'
 import { Screen, Header, FoodItemVertical, MyStatusBar, HeaderStore } from '../components'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -11,6 +11,7 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated'
+import AuthContext from '../hooks/AuthContext';
 
 let topDirection = Platform.OS == 'android' ? StatusBar.currentHeight : 20
 let foodListHeight = Dimensions.get('window').height
@@ -21,8 +22,11 @@ function Store(props) {
     const [selectedItem, setSelectedItem] = useState(1)
     const [store, setStore] = useState({})
     const [foods, setFoods] = useState([])
+    const [isLike, setIsLike] = useState()
+    const [preventLike, setPreventLike] = useState(false)
     const [load, setLoad] = useState(false)
     const [distance, setDistance] = useState(0)
+    const authContext = useContext(AuthContext);
     const menu = useRef()
     const section = useRef()
 
@@ -58,7 +62,15 @@ function Store(props) {
             })
             setFoods(tempFood)
             setLoad(true)
-            getDirections(null, `${store.data.coordinate.lat},${store.data.coordinate.lng}`)
+            getDirections(`${props.location.lat},${props.location.lng}`, `${store.data.coordinate.lat},${store.data.coordinate.lng}`)
+                .then(res => {
+                    if (!res) {
+                        let distance = calculate_distance(props.location.lat, props.location.lng, store.data.coordinate.lat, store.data.coordinate.lng, 'K')
+                        setDistance(distance.toFixed(2) + 'km')
+                    }
+                })
+            // console.log(distance)
+
         } catch (err) {
             setLoad(true)
         }
@@ -66,10 +78,15 @@ function Store(props) {
     }
 
     useEffect(() => {
+        console.log(store)
         getStoreInfo();
         return () => { }
-
     }, [])
+
+    useEffect(() => {
+        setIsLike(authContext.user.favouriteRestaurent?.includes(store._id))
+        return () => { }
+    }, [store])
 
     const _onViewableItemsChanged = ({ viewableItems, changed }) => {
         let length = viewableItems.length
@@ -129,15 +146,29 @@ function Store(props) {
         }
     }
 
-    const getDirections = async function (startLoc, destinationLoc) {
 
+    function calculate_distance(lat1, lon1, lat2, lon2, unit) {
+        var radlat1 = Math.PI * lat1 / 180
+        var radlat2 = Math.PI * lat2 / 180
+        var theta = lon1 - lon2
+        var radtheta = Math.PI * theta / 180
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        dist = Math.acos(dist)
+        dist = dist * 180 / Math.PI
+        dist = dist * 60 * 1.1515
+        if (unit == "K") { dist = dist * 1.609344 }
+        if (unit == "N") { dist = dist * 0.8684 }
+        return dist
+    }
+
+    const getDirections = async function (startLoc, destinationLoc) {
         try {
-            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=10.824922104301836,106.68002408383542&destination=${destinationLoc}&key=AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU`)
+            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&key=AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU`)
             let respJson = await resp.json()
             setDistance(respJson.routes[0].legs[0].distance.text)
-            return coords
+            return true
         } catch (error) {
-            return error
+            return false
         }
     }
 
@@ -148,6 +179,21 @@ function Store(props) {
     })
 
 
+    const onLikeStore = () => {
+        console.log(preventLike)
+        if (!preventLike) {
+            setPreventLike(true)
+            setIsLike(!isLike)
+        }
+
+        console.log('like')
+    }
+
+    const onSearchStore = () => {
+
+        console.log('search')
+    }
+
     return (
         load ?
             <>
@@ -156,7 +202,12 @@ function Store(props) {
 
                     <Animated.View style={[{ zIndex: 6, backgroundColor: 'white', top: -20, paddingTop: 20 }, opacityHeaderMenuStyles]}>
                         <Header
-                            style={{ borderBottomWidth: 0 }} styleIcon={{ backgroundColor: 'white' }}
+                            style={{ borderBottomWidth: 0 }}
+                            styleIcon={{ backgroundColor: 'white' }}
+                            isStore={true}
+                            isLiked={isLike}
+                            onLike={onLikeStore}
+                            onSearch={onSearchStore}
                         >
                             {store.name}
                         </Header>
@@ -181,7 +232,7 @@ function Store(props) {
                             <Ionicons name="arrow-back" size={24} color="white" />
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'row' }}>
-                            <MaterialCommunityIcons name="heart-outline" size={22} color="white" style={{ marginRight: 15, position: 'relative', top: -3, right: 4 }} />
+                            <MaterialCommunityIcons name={isLike ? "heart" : "heart-outline"} size={25} color={isLike ? "#f75f2d" : "white"} style={{ marginRight: 15, position: 'relative', top: -3, right: 4 }} />
                             <Ionicons name="md-search" size={22} color="white" style={{ position: 'relative', top: -3, right: 4 }} />
                         </View>
 
@@ -321,7 +372,8 @@ const styles = StyleSheet.create({
 })
 const mapStateToProps = (state) => {
     return {
-        cart: state.cart
+        cart: state.cart,
+        location: state.currentLocation
     }
 }
 const mapDispatchToProps = (dispatch) => {

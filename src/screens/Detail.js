@@ -34,6 +34,8 @@ function Detail(props) {
             });
     }, []);
 
+
+
     const onLoadMore = index => {
         setLoadMore(true);
         listCategory[index].page += 1;
@@ -158,6 +160,7 @@ function Detail(props) {
             useNativeDriver: false
         }).start();
     };
+
     return (
         load ?
             <>

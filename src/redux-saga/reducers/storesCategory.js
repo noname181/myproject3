@@ -1,7 +1,7 @@
 import * as types from '../constants';
 
 // Initial State
-const initialState = [];
+const initialState = null;
 // Redux: Counter Reducer
 const storesCategory = (state = initialState, action) => {
     switch (action.type) {

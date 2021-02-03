@@ -2,8 +2,9 @@ import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const Header = ({ children, style, isHome, styleIcon }) => {
+const Header = ({ children, style, isHome, styleIcon, isStore, onLike, onSearch, isLiked }) => {
     const navigation = useNavigation();
 
     return (
@@ -21,9 +22,23 @@ const Header = ({ children, style, isHome, styleIcon }) => {
                         <TouchableOpacity style={styles.icon} onPress={() => navigation.goBack()}>
                             <Icon name='arrow-back' color={'#f75f2d'} size={24} />
                         </TouchableOpacity>
+
                     </View>
             }
             <Text style={[styles.title]}>{children}</Text>
+            {
+                isStore ?
+                    <View style={{ position: 'absolute', flexDirection: 'row', right: 20, top: 16 }}>
+                        <TouchableOpacity onPress={onLike}>
+                            <MaterialCommunityIcons name={isLiked ? "heart" : "heart-outline"} size={25} color={isLiked ? "#f75f2d" : "#f75f2d"} style={{ marginRight: 15, position: 'relative', top: -3, right: 4 }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onSearch}>
+                            <Icon name="md-search" size={22} color="#f75f2d" style={{ position: 'relative', top: -3, right: 4 }} />
+                        </TouchableOpacity>
+                    </View>
+                    :
+                    null
+            }
         </View>
     )
 

@@ -208,7 +208,7 @@ function Main(props) {
                 <View style={{ backgroundColor: '#fff' }}>
                     <TouchableOpacity onPress={() => props.navigation.navigate('GoogleAutocomplete')} style={{ flexDirection: 'row', height: 30, alignItems: 'center', paddingHorizontal: 15 }}>
                         <MaterialCommunityIcons name="map-marker" color="#f75f2d" size={20} />
-                        <Text style={{ flex: 1, marginHorizontal: 10, fontSize: 16 }} numberOfLines={1}>
+                        <Text style={{ flex: 1, marginHorizontal: 10, fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
                             {props.address ? props.address : 'Locating places...'}
                         </Text>
                         <MaterialCommunityIcons name="chevron-right" color="#000" size={20} />

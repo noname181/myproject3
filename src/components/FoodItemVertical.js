@@ -24,7 +24,7 @@ function FoodItem(props) {
                     <Text style={[styles.row, styles.address]} numberOfLines={2}>{props.description}</Text>
                     <Text style={[styles.row, styles.address]} numberOfLines={2}>{props.address}</Text>
                     {
-                        props.distance ? <Text style={[styles.row, styles.distance]}>{(props.distance * 1.3).toFixed(2)}km</Text> : null
+                        props.distance ? <Text style={[styles.row, styles.distance]}>{(props.distance).toFixed(2)}km</Text> : null
                     }
 
                     <Text style={[styles.row, styles.price]}>{props.price ? (props.price.toFixed(3).replace(/\d(?=(\d{3})+\.)/g, '$&.')).slice(0, -4) + "đ" : null}</Text>

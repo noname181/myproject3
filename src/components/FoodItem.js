@@ -28,7 +28,7 @@ function FoodItem(props) {
 
                 <View style={[styles.info, { marginVertical: 3 }]}>
                     <MaterialIcons name="alarm" color='#707070' size={12} />
-                    <Text style={styles.distance}>{(props.distance * 1.3).toFixed(2)}km</Text>
+                    <Text style={styles.distance}>{(props.distance).toFixed(2)}km</Text>
                 </View>
                 <View style={[styles.info, props.price ? { marginVertical: 3 } : { display: 'none' }]}>
                     <FontAwesome name="money" color='#707070' size={12}></FontAwesome>
