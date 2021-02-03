@@ -24,8 +24,8 @@ function Map(props) {
     const [status, setStatus] = useState(false)
 
     const [currentLocation, setCurrentLocation] = useState({
-        latitude: 10.824993074806187,
-        longitude: 106.68009634009928,
+        latitude: props.currentLocation.lat,
+        longitude: props.currentLocation.lng,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     })
@@ -34,7 +34,7 @@ function Map(props) {
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        // requestLocationPermission()
+        requestLocationPermission()
         return () => {
         }
     }, [])
@@ -110,7 +110,7 @@ function Map(props) {
     const getDirections = async function (startLoc, destinationLoc) {
 
         try {
-            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=10.824922104301836,106.68002408383542&destination=${destinationLoc}&key=AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU`)
+            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${currentLocation.latitude},${currentLocation.longitude}&destination=${destinationLoc}&key=AIzaSyB12tR2B1s4TGPG5zwoJ-w1MEH3gh-FLuU`)
             let respJson = await resp.json()
             setDistance(respJson.routes[0].legs[0].distance.text)
             setAddress(respJson.routes[0].legs[0].end_address)
@@ -126,6 +126,7 @@ function Map(props) {
             return coords
         } catch (error) {
             setStatus(false)
+            console.log(error)
             return error
         }
     }
@@ -144,7 +145,7 @@ function Map(props) {
 
         favouriteList.length > 0 ? getDirections(null, `${favouriteList[0].coordinate.lat},${favouriteList[0].coordinate.lng}`) : setStatus(false)
     }, [props.stores, props.currentLocation, favouriteList, isFocused])
-    console.log(status)
+    console.log(props.currentLocation)
 
     const favouriteList = authContext.user ? props.stores.filter((value, index) => {
         return authContext.user.favouriteRestaurent?.includes(value._id)
@@ -174,12 +175,7 @@ function Map(props) {
                     provider={PROVIDER_GOOGLE}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
-                    initialRegion={{
-                        latitude: 10.824993074806187,
-                        longitude: 106.68009634009928,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
+                    initialRegion={currentLocation}
                 // onRegionChangeComplete={(region) => {
                 //     Geocoder.from(region.latitude, region.longitude)
                 //         .then(json => {
@@ -298,7 +294,7 @@ const styles = StyleSheet.create({
         width: 300,
         backgroundColor: 'rgba(0,0,0,0.4)',
         padding: 10,
-        borderRadius: 20
+        borderRadius: 20,
     },
     info: {
         position: 'relative',

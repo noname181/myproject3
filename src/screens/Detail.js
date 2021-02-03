@@ -35,7 +35,6 @@ function Detail(props) {
     }, []);
 
     const onLoadMore = index => {
-        console.log(index)
         setLoadMore(true);
         listCategory[index].page += 1;
         axios.get('https://restfull-api-nodejs-mongodb.herokuapp.com/stores/' + listCategory[index].key + '/' + listCategory[index].page * 10).then(res => {

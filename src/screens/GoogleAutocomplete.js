@@ -15,6 +15,7 @@ function MapContainer() {
     const [typing, setTyping] = useState(false);
     const [selection, setSelection] = useState({ start: 0, end: 0 });
     const [address, setAddress] = useState("");
+    const map = useRef()
 
     useEffect(() => {
         getInitialState();
@@ -41,12 +42,14 @@ function MapContainer() {
 
     function getCoordsFromName(loc) {
         setTyping(false);
-        setRegion({
+        let region = {
             latitude: loc.lat,
             longitude: loc.lng,
             latitudeDelta: 0.003,
             longitudeDelta: 0.003
-        });
+        }
+        setRegion(region);
+        map.current.animateToRegion(region, 1000)
         Geocoder.from(loc.lat, loc.lng)
             .then(json => {
                 let address = json.results[0].formatted_address;
@@ -102,9 +105,18 @@ function MapContainer() {
             {
                 region['latitude'] && !typing ?
                     <View style={{ position: 'absolute', height: height - 40, width: width, top: Platform.OS == 'android' ? StatusBar.currentHeight + 40 : 60, left: 0, zIndex: 2, elevation: 2 }}>
-                        <MyMapView
-                            region={region}
-                            onRegionChange={(reg) => onMapRegionChange(reg)} />
+                        <MapView
+                            style={{ flex: 1 }}
+                            initialRegion={region}
+                            // showsUserLocation={true}
+                            // showsMyLocationButton={true}
+                            onRegionChangeComplete={(reg) => onMapRegionChange(reg)}
+                            ref={map}
+                        >
+
+                            {/* <Marker coordinate={props.region} image={require('../../assets/images/marker.png')} /> */}
+                        </MapView>
+
                         <Image resizeMode={'contain'} source={require('../assets/images/marker.png')} style={{ height: 40, width: 40, borderRadius: 25, position: 'absolute', top: (height - 120) / 2, right: (width - 40) / 2 }}></Image>
 
                     </View>

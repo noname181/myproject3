@@ -1,14 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { View, Text, StyleSheet, FlatList, ScrollView, Dimensions, Image, Button } from 'react-native'
-import { Screen, Header, FoodItem, Category, LoadingChild, FoodItemVertical, MyStatusBar } from '../components'
+import { View, Text, StyleSheet, FlatList, ScrollView, Dimensions, Image, TextInput } from 'react-native'
+import { Screen, Header, FoodItem, Category, LoadingChild, FoodItemVertical, MyStatusBar, InputIcon } from '../components'
 import { useFocusEffect, CommonActions } from '@react-navigation/native'
 import Carousel from 'react-native-snap-carousel'
 import * as actions from '../redux-saga/actions/main'
 import { connect } from 'react-redux'
-import Geolocation from '@react-native-community/geolocation'
+import Geolocation from 'react-native-geolocation-service'
 import { request, PERMISSIONS } from 'react-native-permissions'
 import AsyncStorage from '@react-native-community/async-storage'
-import Images from '../assets/images/Images';
+import Images from '../assets/images/Images'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const width = Dimensions.get('window').width
 
@@ -134,6 +137,7 @@ function Main(props) {
                 })
             },
             error => {
+                // console.log(error)
                 props.getCurrentLocation({
                     lat: 10.825257491082173,
                     lng: 106.6800306617377
@@ -143,9 +147,8 @@ function Main(props) {
                     lng: 106.6800306617377
                 })
             }, {
-            enableHighAccuracy: false,
+            enableHighAccuracy: true,
             timeout: 20000,
-            maximumAge: 3600000
         }
         )
     }
@@ -198,9 +201,21 @@ function Main(props) {
         <Screen style={styles.container}>
             <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
             {/* <Header isHome={true}>HOME</Header> */}
-            <ScrollView>
+            <ScrollView stickyHeaderIndices={[0]}>
+                <View style={{ backgroundColor: '#fff' }}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Autocomplete')} style={{ flexDirection: 'row', height: 30, alignItems: 'center', paddingHorizontal: 15 }}>
+                        <MaterialCommunityIcons name="map-marker" color="#f75f2d" size={20} />
+                        <Text style={{ flex: 1, marginHorizontal: 10, fontSize: 16 }} numberOfLines={1}>36/14/4 Bình Lợi, Phường 13, Quận Bình Thạnh</Text>
+                        <MaterialCommunityIcons name="chevron-right" color="#000" size={20} />
+                    </TouchableOpacity>
+                    <View style={styles.inputIcon}>
+                        <Ionicons name="search" size={20} color="#c0c0c0" />
+                        <TextInput placeholder="Tìm nhà hàng, món ăn"></TextInput>
+                    </View>
+                </View>
                 <View style={styles.main}>
                     {/* <Carousel data={bannerSlide} /> */}
+
                     <Carousel
                         layout={"default"}
                         contentContainerCustomStyle={{ backgroundColor: 'floralwhite', }}
@@ -290,7 +305,7 @@ function Main(props) {
 
                 </View>
             </ScrollView>
-        </Screen >
+        </Screen>
     )
 }
 
@@ -350,6 +365,16 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         overflow: 'visible',
         marginRight: 30
+    },
+    inputIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f3f3f3',
+        height: 40,
+        marginHorizontal: 15,
+        borderRadius: 20,
+        marginVertical: 10
     }
 })
 

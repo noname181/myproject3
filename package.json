@@ -34,6 +34,7 @@
     "react": "16.13.1",
     "react-native": "0.63.2",
     "react-native-geocoding": "^0.4.0",
+    "react-native-geolocation-service": "^5.2.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-google-places-autocomplete": "^2.1.1",
     "react-native-image-picker": "^2.3.4",
