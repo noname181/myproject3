@@ -12,6 +12,8 @@ import Animated, {
     useSharedValue,
 } from 'react-native-reanimated'
 import AuthContext from '../hooks/AuthContext';
+import jwtDecode from 'jwt-decode';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let topDirection = Platform.OS == 'android' ? StatusBar.currentHeight : 20
 let foodListHeight = Dimensions.get('window').height
@@ -180,13 +182,29 @@ function Store(props) {
 
 
     const onLikeStore = () => {
-        console.log(preventLike)
         if (!preventLike) {
             setPreventLike(true)
             setIsLike(!isLike)
+            console.log("https://restfull-api-nodejs-mongodb.herokuapp.com/users/like/" + authContext.user._id)
+            console.log(isLike, store._id)
+            axios.put("https://restfull-api-nodejs-mongodb.herokuapp.com/users/like/" + authContext.user._id, {
+                type: isLike,
+                storeId: store._id
+            }, {
+                timeout: 120000
+            }).then(res => {
+                console.log(res.data.token)
+                const user = jwtDecode(res.data.token);
+                AsyncStorage.setItem('token', res.data.token)
+                authContext.setUser(user);
+                setPreventLike(false)
+            }).catch(err => {
+                console.log(err)
+                setPreventLike(false)
+            })
         }
 
-        console.log('like')
+
     }
 
     const onSearchStore = () => {

@@ -206,7 +206,7 @@ function Main(props) {
             {/* <Header isHome={true}>HOME</Header> */}
             <ScrollView stickyHeaderIndices={[0]}>
                 <View style={{ backgroundColor: '#fff' }}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('GoogleAutocomplete')} style={{ flexDirection: 'row', height: 30, alignItems: 'center', paddingHorizontal: 15 }}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('GoogleAutocomplete')} style={{ flexDirection: 'row', height: 30, alignItems: 'center', paddingHorizontal: 15, marginTop: 10 }}>
                         <MaterialCommunityIcons name="map-marker" color="#f75f2d" size={20} />
                         <Text style={{ flex: 1, marginHorizontal: 10, fontSize: 16, fontWeight: 'bold' }} numberOfLines={1}>
                             {props.address ? props.address : 'Locating places...'}
@@ -214,8 +214,8 @@ function Main(props) {
                         <MaterialCommunityIcons name="chevron-right" color="#000" size={20} />
                     </TouchableOpacity>
                     <View style={styles.inputIcon}>
-                        <Ionicons name="search" size={20} color="#c0c0c0" />
-                        <TextInput placeholder="Tìm nhà hàng, món ăn"></TextInput>
+                        <Ionicons name="search" size={20} color="#c0c0c0" style={{ marginRight: 10 }} />
+                        <TextInput placeholder="Tìm nhà hàng, món ăn" placeholderTextColor="#c0c0c0"></TextInput>
                     </View>
                 </View>
                 <View style={styles.main}>

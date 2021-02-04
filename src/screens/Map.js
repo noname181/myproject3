@@ -80,7 +80,7 @@ function Map(props) {
     function renderCarouselItem(item) {
         return (
             <View style={styles.itemContainer}>
-                <Text style={styles.itemTitle}>{item.item.name}</Text>
+                <Text style={styles.itemTitle} numberOfLines={1}>{item.item.name}</Text>
                 <Image source={{ uri: item.item.banner }} style={styles.itemImage}></Image>
             </View>
         )
@@ -308,7 +308,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         backgroundColor: 'rgba(0,0,0,0.4)',
         left: 0,
-        right: 0
+        right: 0,
+        width: '100%'
     },
     myInput: {
         width: '100%',
