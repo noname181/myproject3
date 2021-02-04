@@ -146,7 +146,7 @@ function Map(props) {
 
         favouriteList.length > 0 ? getDirections(null, `${favouriteList[0].coordinate.lat},${favouriteList[0].coordinate.lng}`) : setStatus(false)
     }, [props.stores, props.currentLocation, favouriteList, isFocused])
-    console.log(props.currentLocation)
+
 
     const favouriteList = authContext.user ? props.stores.filter((value, index) => {
         return authContext.user.favouriteRestaurent?.includes(value._id)

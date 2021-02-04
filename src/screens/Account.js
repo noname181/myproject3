@@ -117,7 +117,7 @@ function Account({ navigation }) {
                         resizeMode="cover"
                         style={{ height: 80, width: 80, borderRadius: 50 }}
                         source={fileUri ? { uri: fileUri } : // if clicked a new img
-                            { uri: 'https://svhutech.nonamee.com/upload/' + authContext.user['image'] }} //else show random
+                            authContext.user['image'] ? { uri: 'https://svhutech.nonamee.com/upload/' + authContext.user['image'] } : { uri: 'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png' }} //else show random
                     />
                     <TouchableOpacity style={styles.addPictureIcon} onPress={
                         chooseImage

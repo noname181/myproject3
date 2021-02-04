@@ -102,6 +102,7 @@ function Main(props) {
             promo={item.promo}
             star={4.5}
             topView={true}
+            type="store"
         />
     }
 

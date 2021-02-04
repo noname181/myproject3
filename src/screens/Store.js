@@ -14,6 +14,7 @@ import Animated, {
 import AuthContext from '../hooks/AuthContext';
 import jwtDecode from 'jwt-decode';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 let topDirection = Platform.OS == 'android' ? StatusBar.currentHeight : 20
 let foodListHeight = Dimensions.get('window').height
@@ -21,6 +22,7 @@ let sectionOffScroll = false
 const width = Dimensions.get('window').width
 
 function Store(props) {
+    const navigation = useNavigation()
     const [selectedItem, setSelectedItem] = useState(1)
     const [store, setStore] = useState({})
     const [foods, setFoods] = useState([])
@@ -80,10 +82,18 @@ function Store(props) {
     }
 
     useEffect(() => {
-        console.log(store)
+        const onBlur = navigation.addListener('blur', () => {
+            setLoad(false)
+        })
+        return () => {
+            onBlur
+        }
+    }, [])
+
+    useEffect(() => {
         getStoreInfo();
         return () => { }
-    }, [])
+    }, [props.route.params.id])
 
     useEffect(() => {
         setIsLike(authContext.user.favouriteRestaurent?.includes(store._id))
