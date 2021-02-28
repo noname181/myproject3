@@ -72,6 +72,7 @@ function Account({ navigation }) {
                                     axios.post('https://restfull-api-nodejs-mongodb.herokuapp.com/users/' + authContext.user['_id'], formData, {
                                         headers: {
                                             'Content-Type': 'multipart/form-data',
+                                            'x-auth-token': token
                                         }
                                     })
                                         .then(res => {
