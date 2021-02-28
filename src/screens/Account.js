@@ -76,7 +76,7 @@ function Account({ navigation }) {
                                         }
                                     })
                                         .then(res => {
-                                            console.log(res);
+
                                             axios.put('https://restfull-api-nodejs-mongodb.herokuapp.com/users/' + authContext.user['_id'], {
                                                 image: res.data.image
                                             }, {
