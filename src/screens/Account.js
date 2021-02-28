@@ -63,13 +63,13 @@ function Account({ navigation }) {
                                     tabBarVisible: false
                                 });
                                 const formData = new FormData();
-                                formData.append('submit', 'ok');
-                                formData.append('file', { type: response.type, uri: Platform.OS == 'ios' ? response.uri : 'file://' + response.path, name: "noname.jpg" });
+                                // formData.append('submit', 'ok');
+                                formData.append('img', { type: response.type, uri: Platform.OS == 'ios' ? response.uri : 'file://' + response.path, name: "noname.jpg" });
                                 formData.append('oldImage', authContext.user.image);
                                 console.log(formData);
                                 setLoading(true);
                                 setTimeout(() => {
-                                    axios.post('https://svhutech.nonamee.com/upload.php', formData, {
+                                    axios.post('https://restfull-api-nodejs-mongodb.herokuapp.com/users/' + authContext.user['_id'], formData, {
                                         headers: {
                                             'Content-Type': 'multipart/form-data',
                                         }
