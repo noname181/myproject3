@@ -64,21 +64,26 @@ function Account({ navigation }) {
                                 });
                                 const formData = new FormData();
                                 // formData.append('submit', 'ok');
-                                formData.append('img', { type: response.type, uri: Platform.OS == 'ios' ? response.uri : 'file://' + response.path, name: "noname.jpg" });
+                                formData.append('img', {
+                                    type: response.type,
+                                    uri: Platform.OS == 'ios' ? response.uri : 'file://' + response.path,
+                                    name: "noname.jpg"
+                                });
                                 formData.append('oldImage', authContext.user.image);
                                 console.log(formData);
                                 setLoading(true);
                                 setTimeout(() => {
-                                    axios.post('https://restfull-api-nodejs-mongodb.herokuapp.com/users/' + authContext.user['_id'], formData, {
+                                    axios.put('https://restfull-api-nodejs-mongodb.herokuapp.com/users/avatar/' + authContext.user['_id'], formData, {
                                         headers: {
                                             'Content-Type': 'multipart/form-data',
                                             'x-auth-token': token
                                         }
                                     })
                                         .then(res => {
-
+                                            console.log(res.data.file.filename)
+                                            axios.delete('https://restfull-api-nodejs-mongodb.herokuapp.com/avatar/' + authContext.user.image)
                                             axios.put('https://restfull-api-nodejs-mongodb.herokuapp.com/users/' + authContext.user['_id'], {
-                                                image: res.data.image
+                                                image: res.data.file.filename
                                             }, {
                                                 headers: {
                                                     'x-auth-token': token
@@ -90,11 +95,12 @@ function Account({ navigation }) {
                                                 });
                                                 AsyncStorage.setItem('token', res.headers['x-auth-token']);
                                                 let user = jwtDecode(res.headers['x-auth-token']);
-                                                console.log(user.image);
+
                                                 authContext.setUser(user);
                                             })
                                         })
                                         .catch((err) => {
+                                            setLoading(false);
                                             console.log(err)
                                         })
 
@@ -118,7 +124,7 @@ function Account({ navigation }) {
                         resizeMode="cover"
                         style={{ height: 80, width: 80, borderRadius: 50 }}
                         source={fileUri ? { uri: fileUri } : // if clicked a new img
-                            authContext.user['image'] ? { uri: 'https://svhutech.nonamee.com/upload/' + authContext.user['image'] } : { uri: 'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png' }} //else show random
+                            authContext.user['image'] ? { uri: 'https://restfull-api-nodejs-mongodb.herokuapp.com/avatar/' + authContext.user['image'] } : { uri: 'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png' }} //else show random
                     />
                     <TouchableOpacity style={styles.addPictureIcon} onPress={
                         chooseImage
