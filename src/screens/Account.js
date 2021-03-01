@@ -46,7 +46,7 @@ function Account({ navigation }) {
                 alert(response.customButton);
             } else {
                 SetFileuri(response.uri) //update state to update Image
-                console.log(response)
+
                 Alert.alert(
                     'Confirm',
                     'Are you sure to update your avatar?',
@@ -70,7 +70,6 @@ function Account({ navigation }) {
                                     name: "noname.jpg"
                                 });
                                 formData.append('oldImage', authContext.user.image);
-                                console.log(formData);
                                 setLoading(true);
                                 setTimeout(() => {
                                     axios.put('https://restfull-api-nodejs-mongodb.herokuapp.com/users/avatar/' + authContext.user['_id'], formData, {
