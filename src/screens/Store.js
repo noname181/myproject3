@@ -83,7 +83,8 @@ function Store(props) {
 
     useEffect(() => {
         const onBlur = navigation.addListener('blur', () => {
-            setLoad(false)
+            console.log("blur");
+            setLoad(true)
         })
         return () => {
             onBlur
