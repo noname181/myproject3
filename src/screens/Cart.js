@@ -39,8 +39,8 @@ function Cart(props) {
             })}
             {/* <Button onPress={() => props.navigation.navigate('Test')} title="TEST"></Button> */}
             <TouchableOpacity style={styles.cartBar} >
-                <Text style={styles.cartText}>{amount} Món</Text>
-                <Text style={styles.cartText}>Thanh toán</Text>
+                <Text style={styles.cartText}>{amount} Dish</Text>
+                <Text style={styles.cartText}>Payment</Text>
                 <Text style={styles.cartText}>{(total.toFixed(3).replace(/\d(?=(\d{3})+\.)/g, '$&.')).slice(0, -4)}đ</Text>
             </TouchableOpacity>
         </Screen >

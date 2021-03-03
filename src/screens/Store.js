@@ -270,8 +270,8 @@ function Store(props) {
                         props.cart.length !== 0 ?
                             <View style={{ width: '100%', zIndex: 7, position: 'absolute', bottom: 0, paddingBottom: 15, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
                                 <TouchableOpacity style={styles.cartBar} onPress={() => props.navigation.navigate('Cart')}>
-                                    <Text style={styles.cartText}>{amount} Món</Text>
-                                    <Text style={styles.cartText}>Giỏ hàng</Text>
+                                    <Text style={styles.cartText}>{amount} Dish</Text>
+                                    <Text style={styles.cartText}>Cart</Text>
                                     <Text style={styles.cartText}>{(total.toFixed(3).replace(/\d(?=(\d{3})+\.)/g, '$&.')).slice(0, -4)}đ</Text>
                                 </TouchableOpacity>
                             </View> : null
