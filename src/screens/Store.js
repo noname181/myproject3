@@ -97,7 +97,7 @@ function Store(props) {
     }, [props.route.params.id])
 
     useEffect(() => {
-        setIsLike(authContext.user.favouriteRestaurent?.includes(store._id))
+        setIsLike(authContext.user?.favouriteRestaurent?.includes(store._id))
         return () => { }
     }, [store])
 
