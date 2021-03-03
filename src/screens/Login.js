@@ -159,7 +159,7 @@ const Login = () => {
         <Screen>
             { loading ? <Loading></Loading> : null}
             <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-            <Header isHome={true}> LOGIN</Header>
+            <Header isHome={true}> Log In</Header>
             <Modal
                 animationType="slide"
                 transparent={true}

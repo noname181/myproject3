@@ -63,7 +63,7 @@ function SignUp({ route }) {
         <Screen>
             { loading ? <Loading></Loading> : null}
             <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-            <Header> SIGN UP</Header>
+            <Header>Sign Up</Header>
             <ScrollView>
                 <View style={styles.container}>
                     <Formik
