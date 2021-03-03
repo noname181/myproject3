@@ -79,7 +79,7 @@ function ProductDetail(props) {
 
                     <TouchableOpacity style={styles.cartBar} onPress={addToCart}>
                         <Text style={styles.cartText}>{amount} Món</Text>
-                        <Text style={styles.cartText}>Thêm</Text>
+                        <Text style={styles.cartText}>Add</Text>
                         <Text style={styles.cartText}>{(total.toFixed(3).replace(/\d(?=(\d{3})+\.)/g, '$&.')).slice(0, -4)}đ</Text>
                     </TouchableOpacity>
                 </Screen>

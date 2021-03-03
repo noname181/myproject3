@@ -209,7 +209,7 @@ function Notification(props) {
     return (
         <Screen style={styles.container}>
             <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-            <Header isHome={true}>Hộp thư</Header>
+            <Header isHome={true}>Notifications</Header>
             <SwipeListView
                 style={{ paddingTop: 15 }}
                 data={listData}

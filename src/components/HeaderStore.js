@@ -15,7 +15,7 @@ function HeaderStore({ store, distance }) {
 
                 <View style={{ position: "absolute", top: 8, alignItems: 'center' }}>
                     <Ionicons name="bookmark-sharp" size={25} color="#f75f2d" style={{ position: "relative", top: -11 }}></Ionicons>
-                    <Text style={{ fontSize: 15, color: '#f75f2d', position: "relative", top: -10 }}>ĐỐI TÁC CỦA NONAME</Text>
+                    <Text style={{ fontSize: 15, color: '#f75f2d', position: "relative", top: -10 }}>NONAME'S PARTNER</Text>
                 </View>
 
                 <Text numberOfLines={2} style={styles.name}>{store.name}</Text>

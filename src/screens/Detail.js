@@ -166,7 +166,7 @@ function Detail(props) {
             <>
                 <Screen style={styles.container}>
                     <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-                    <Header style={{ borderBottomWidth: 0 }}>Hôm nay ăn gì?</Header>
+                    <Header style={{ borderBottomWidth: 0 }}>Categories Food</Header>
                     <View style={styles.listMenu}>
                         <FlatList
                             ref={menu}

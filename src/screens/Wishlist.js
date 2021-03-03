@@ -163,7 +163,7 @@ function Wishlist(props) {
     return (
         <Screen style={styles.container}>
             <MyStatusBar backgroundColor="#fff" barStyle="dark-content" />
-            <Header isHome={true}>Quán thân thương</Header>
+            <Header isHome={true}>Favourite Stores</Header>
             {dragging && <Animated.View
                 style={{
                     right: 0,

@@ -298,7 +298,7 @@ const Login = () => {
                     </View>
                 </View>
                 <View style={styles.social}>
-                    <MyButton
+                    {/* <MyButton
                         title={'Login'}
                         style={styles.socialbtn}
                         textStyle={styles.textSocial}
@@ -318,7 +318,7 @@ const Login = () => {
                     >
 
                         Facebook
-                    </MyButton>
+                    </MyButton> */}
                     <MyButton
                         title={'Login'}
                         style={styles.socialbtn}
