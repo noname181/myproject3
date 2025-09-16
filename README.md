@@ -11,7 +11,34 @@ All steps are tailored for a Windows workstation initiating the setup.
 
 ---
 
-## Part 0 — Create 4 GitHub repositories and push source to the default `master` branch
+## Prerequisites
+
+- Vultr account (we can provide if needed)
+- GitHub account with owner access to the following repositories:
+  - `HDO_ADMIN` (React Admin)
+  - `HDO_APP` (Flutter App)
+  - `HDO_API` (Node.js API)
+  - `HDO_OCPP_SERVER` (Java OCPP)
+- Windows computer with:
+  - PowerShell or Command Prompt
+  - SSH client (built into Windows 10/11 PowerShell)
+  - Web browser
+- AUIGrid license key (will be generated using your server’s public IP)
+
+---
+
+## Architecture & Ports
+
+- Admin Web (React): `http://<server-ip>:3001`
+- Node API: `http://<server-ip>:8081` and `http://<server-ip>:8081/v1`
+- Java OCPP WebSocket: `ws://<server-ip>:8887`
+- Java OCPP API: `http://<server-ip>:9999`
+
+Important: Use HTTP (not HTTPS) per the initial setup in this guide.
+
+---
+
+## Part 1 — Create 4 GitHub repositories and push source to the default `master` branch
 
 You will need 4 separate repositories on GitHub for the CI/CD pipeline, login to GitHub and create the following repositories:
 
@@ -140,34 +167,7 @@ After pushing your code:
 
 ---
 
-## Prerequisites
-
-- Vultr account (we can provide if needed)
-- GitHub account with access to the following repositories:
-  - `HDO_ADMIN` (React Admin)
-  - `HDO_APP` (Flutter App)
-  - `HDO_API` (Node.js API)
-  - `HDO_OCPP_SERVER` (Java OCPP)
-- Windows computer with:
-  - PowerShell or Command Prompt
-  - SSH client (built into Windows 10/11 PowerShell)
-  - Web browser
-- AUIGrid license key (will be generated using your server’s public IP)
-
----
-
-## Architecture & Ports
-
-- Admin Web (React): `http://<server-ip>:3001`
-- Node API: `http://<server-ip>:8081` and `http://<server-ip>:8081/v1`
-- Java OCPP WebSocket: `ws://<server-ip>:8887`
-- Java OCPP API: `http://<server-ip>:9999`
-
-Important: Use HTTP (not HTTPS) per the initial setup in this guide.
-
----
-
-## Part 1 — Create and Configure a Server on Vultr
+## Part 2 — Create and Configure a Server on Vultr
 
 1. Sign up at https://www.vultr.com or log in to your existing account.
 2. In the top-right, click "Deploy".
@@ -207,7 +207,7 @@ Important: Use HTTP (not HTTPS) per the initial setup in this guide.
 
 ---
 
-## Part 2 — SSH to the Server (Windows)
+## Part 3 — SSH to the Server (Windows)
 
 Open PowerShell or Command Prompt on Windows, then type to run:
 
@@ -224,7 +224,7 @@ ssh root@139.180.210.178
 
 ---
 
-## Part 3 — Install Docker Engine on Ubuntu
+## Part 4 — Install Docker Engine on Ubuntu
 
 Follow Docker’s official installation steps (reference: https://docs.docker.com/engine/install/). Below are the exact commands for Ubuntu 25.xx, copy and run one by one on terminal:
 
@@ -295,7 +295,7 @@ This network can be referenced by your containers for inter-service communicatio
 
 ---
 
-## Part 4 — Obtain AUIGrid License for Admin Web
+## Part 5 — Obtain AUIGrid License for Admin Web
 
 1. Visit https://www.auisoft.net/dcenter.html#
 2. In section 2, add the newly created server’s public IP address
@@ -308,7 +308,7 @@ This network can be referenced by your containers for inter-service communicatio
 
 ---
 
-## Part 5 — Configure GitHub Secrets for Each Repository
+## Part 6 — Configure GitHub Secrets for Each Repository
 
 You will configure GitHub Actions secrets in each repository under:
 
@@ -352,7 +352,7 @@ Make the changes below, then trigger the workflows as described in Part 6.
 
 ---
 
-## Part 6 — Trigger GitHub Actions Workflows
+## Part 7 — Trigger GitHub Actions Workflows
 
 For each repository:
 
@@ -377,7 +377,7 @@ Important: Use HTTP (not HTTPS).
 
 ---
 
-## Part 7 — Post-Deployment Verification
+## Part 8 — Post-Deployment Verification
 
 - Admin Web: open `http://<server-ip>:3001`
 - Node API base: `http://<server-ip>:8081`
@@ -386,6 +386,35 @@ Important: Use HTTP (not HTTPS).
 - Java OCPP WebSocket: `ws://<server-ip>:8887`
 
 If any endpoint is unreachable, review the Troubleshooting section below.
+
+---
+
+## Glossary (for non-developers)
+
+- Repository (Repo): A project on GitHub that stores your code and history.
+- Branch: A line of development in a repo (e.g., `master`).
+- Commit: A saved snapshot of your code with a message.
+- Push: Upload your local commits to the GitHub repo.
+- Pull Request (PR): A request to merge changes from one branch into another.
+- Workflow (GitHub Actions): An automated process (build, test, deploy) that runs on GitHub.
+- Artifact: A file produced by a workflow (e.g., an Android APK or iOS IPA) that you can download.
+- Secret: An encrypted key/value stored in GitHub to keep credentials safe for workflows.
+- Environment variable: A key/value available to scripts/workflows (e.g., `SERVER_URL`).
+- Flutter: A framework to build mobile apps from a single codebase.
+- Dart: The programming language used by Flutter.
+- Xcode: Apple’s macOS tool for building iOS apps.
+- IPA: The packaged iOS app file (similar to APK on Android) used for TestFlight/App Store.
+- Provisioning Profile: Apple file that allows code signing and installing on devices/stores.
+- Team ID: Your Apple Developer team identifier used for signing.
+- Bundle Identifier: The unique iOS app id (e.g., `com.hdoilbank.evnu.ios`).
+- CocoaPods: Dependency manager for iOS projects (installs iOS libraries).
+- Fastlane: Automation tool to upload apps to TestFlight/App Store, manage signing, etc.
+- Docker: A tool to package apps into containers for consistent deployment.
+- Image (Docker): The template (recipe) used to create running containers.
+- Container (Docker): A running instance of an image.
+- Network (Docker): A virtual network for containers to talk to each other.
+- Port: The numbered door used to access services (e.g., `8081`).
+- Firewall: Rules that allow/block network traffic to your server.
 
 ---
 
